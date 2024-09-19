@@ -17,6 +17,6 @@ PH 2
 PH 3
 
 ## 惠琰博测试
-Hui Yanbo
-Haitipingzifu
-Huashumanchuntian
+HYB H is for hui
+HYB Y is for yan
+HYB B is for bo
