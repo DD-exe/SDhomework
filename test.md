@@ -20,3 +20,8 @@ PH 3
 HYB H is for hui
 HYB Y is for yan
 HYB B is for bo
+
+## Meng Xiang Test
+MX A
+MX B
+MX C
