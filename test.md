@@ -22,6 +22,6 @@ HYB Y is for yan
 HYB B is for bo
 
 ## Meng Xiang Test
-MX A
-MX B
-MX C
+MX A  
+MX B  
+MX C  
