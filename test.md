@@ -26,6 +26,11 @@ HYB H is for hui <br>
 HYB Y is for yan <br>
 HYB B is for bo
 
+## 惠琰博测试1
+HYB It is a tale told by an idiot, <br>
+HYB full of sound and fury, <br>
+HYB signifying nothing.
+
 ## Meng Xiang Test
 MX A  
 MX B  
