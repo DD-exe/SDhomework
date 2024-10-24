@@ -1,0 +1,12 @@
+asgiref
+beautifulsoup4
+certifi
+charset-normalizer
+Django
+idna
+mysqlclient
+requests
+soupsieve
+sqlparse
+tzdata
+urllib3
