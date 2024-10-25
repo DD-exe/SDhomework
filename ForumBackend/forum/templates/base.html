@@ -1,0 +1,52 @@
+<!-- templates/base.html -->
+{% load static %}
+{% load tz %}
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}论坛{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        {% if request.user.is_active %}
+            <h1>欢迎来到论坛，{{ request.user.username }}</h1>
+            <div style="text-align:center;">
+                <a href="{% url 'logout' %}">退出登录</a><!-- 退出登录链接 -->
+            </div>
+        {% else %}
+            <li><a href="{% url 'login' %}">登录</a></li>
+            <li><a href="{% url 'register' %}">注册</a></li>
+
+        {% endif %}
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">主页</a></li>
+                <li><a href="{% url 'post_list' %}">帖子列表</a></li>
+                <li><a href="{% url 'new_post' %}">新建帖子</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/posts.js' %}"></script>
+</body>
+</html>
+
+
+{% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            {% for message in messages %}
+                alert("{{ message|escapejs }}");  // 弹出窗口显示消息
+            {% endfor %}
+        });
+    </script>
+{% endif %}
+
+

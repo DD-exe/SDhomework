@@ -1,0 +1,31 @@
+
+<!-- templates/base.html -->
+{% load static %}
+{% load tz %}
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}论坛{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>欢迎来到论坛主页</h1>
+
+        <nav>
+            <ul>
+                <li><a href="{% url 'register' %}">注册</a></li>
+                <li><a href="{% url 'login' %}">登录</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/posts.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!-- post_list.html -->
+{% extends 'base.html' %}
+{%  load static %}
+
+{% load tz %}
+{% block content %}
+<h1>帖子列表</h1>
+<ul>
+    {% for post in posts %}
+        <li>
+            <h2>{{ post.title }}</h2>
+            <p>主题：{{ post.subject }}</p>
+            <p>内容：{{ post.content }}</p>
+            <p>发帖人: {{ post.user.username }}</p>
+            <p>发帖时间: {{ post.created_at }}</p>
+            <p>更新时间: {{ post.updated_at }}</p>
+            <form action="{% url 'edit_post' post.id %}"method="POST" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">编辑</button>
+            </form>
+            <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                {% csrf_token %}
+                <button type="submit">删除</button>
+            </form>
+        </li>
+    {% empty %}
+        <li>没有帖子可显示。</li>
+    {% endfor %}
+
+<script>
+    function confirmDelete(postId) {
+        return confirm("确认删除这个帖子吗？");
+    }
+</script>
+
+</ul>
+{% endblock %}

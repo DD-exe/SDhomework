@@ -1,0 +1,36 @@
+<!-- new_post.html -->
+{% extends 'base.html' %}
+
+{%  load static %}
+
+{% block content %}
+<h2>新建帖子</h2>
+    <p>当前用户ID: {{ user_id }}</p>
+    <p>当前用户: {{ username }}</p>
+<form method="POST">
+    {% csrf_token %}
+    <div>
+        <label>标题:</label>
+        <input type="text" name="title" required>
+    </div>
+    <div>
+        <label>内容:</label>
+        <textarea name="content" required></textarea>
+    </div>
+    <div>
+        <label>主题:</label>
+        <select name="subject" id="subject-select">
+            <option value="">选择主题</option>
+            {% for subject in subjects %}
+                <option value="{{ subject.name }}">{{ subject.name }}</option>
+            {% endfor %}
+            <option value="自定义">自定义</option>
+        </select>
+        <input type="text" id="custom-subject" name="subject" placeholder="输入自定义主题" style="display:none;">
+    </div>
+    <button type="submit">发布帖子</button>
+</form>
+
+<script src="{% static 'js/CustomizeSubject.js' %}"></script>
+
+{% endblock %}
