@@ -369,19 +369,26 @@ def logout(request):
 
 
 def site_nav(request):
-    # 获取当前用户id，id为ADMIN_ID[0]表示默认用户，显示未登录可以显示的信息
-    id_filter = []
+    if request.method == "GET":
+        # 获取当前用户id，id为ADMIN_ID[0]表示默认用户，显示未登录可以显示的信息
+        id_filter = []
 
-    id_filter.append(ADMIN_ID[0])
+        id_filter.append(ADMIN_ID[0])
 
-    user = request.session.get("user", dict())
-    user_id = user.get("id")
-    if user_id is not None:
-        id_filter.append(user_id)
+        user = request.session.get("user", dict())
+        user_id = user.get("id")
+        if user_id is not None:
+            id_filter.append(user_id)
 
-    site_categ_query = SiteCategory.objects.filter(user__in=id_filter)
-    site_nav_query = SiteNav.objects.filter(user__in=id_filter)
-    return TemplateResponse(request, "site_nav.html", {"site_categ_query": site_categ_query, "site_nav_query": enumerate(site_nav_query)})
+        site_categ_query = SiteCategory.objects.filter(user__in=id_filter)
+        site_nav_query = SiteNav.objects.filter(user__in=id_filter)
+        return TemplateResponse(request, "site_nav.html", {"site_categ_query": site_categ_query, "site_nav_query": enumerate(site_nav_query)})
+    
+    elif request.method == "POST":
+        # 接收XMLHTTPRequest，不刷新页面
+        # 接收config表单信息
+        utils.update_session(request.session, "config", {"display": request.POST.get("config_display", "all_display")})
+        return HttpResponse()
 
 
 def site_nav_list(request):

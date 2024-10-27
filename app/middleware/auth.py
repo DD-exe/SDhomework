@@ -2,6 +2,7 @@ from django.shortcuts import redirect, HttpResponse
 from django.urls import reverse, resolve
 from app.models import User, SiteCategory, SiteNav, ADMIN_ID
 from app import views
+from app.utils import utils
 
 # 在“root.html”中的参数，在中间件的`process_template_response`中赋值
 
@@ -18,16 +19,24 @@ class InfoMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        # 若没有，则创建
         if resolve(request.path_info).func.__name__ in dir(views):
-            if "info" not in request.session or "current_url" not in request.session["info"] or "last_url" not in request.session["info"]:
-                request.session["info"] = {"current_url": request.path_info, "last_url": reverse("app-site-nav")}
+            # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
+
+            print("0: ", request.session.get("info"))
+            # 若没有，则创建
+            utils.set_default_session(request.session, "info", {"current_url": request.path_info, "last_url": reverse("app-site-nav")})
+            print("1: ", request.session.get("info"))
             # 只有不同才改
             if request.session["info"]["current_url"] != request.path_info:
-                # ！！！注意：更新request.session的一个键值对的值时，一定要整体赋值，否则会发生错误
-                # request.session["info"]["last_url"] = request.session["info"]["current_url"][:]
-                # request.session["info"]["current_url"] = request.path_info
-                request.session["info"] = {"current_url": request.path_info, "last_url": request.session["info"]["current_url"]}
+                utils.update_session(request.session, "info", {"current_url": request.path_info, "last_url": request.session["info"]["current_url"]})
+                print("3: ", request.session.get("info"))
+        else:
+            utils.set_default_session(request.session, "info", {"current_url": reverse("app-site-nav"), "last_url": reverse("app-site-nav")})
+        
+        print("4: ", request.session.get("info"))
+        # config
+        utils.set_default_session(request.session, "config", {"display": "all_display"})
+        print(request.session.get("config"))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -45,15 +54,20 @@ class InfoMiddleware:
 
         若视图函数返回`HttpResponse`，则此函数不会被调用，因此如果希望此函数被调用，需要修改视图函数返回对象
         '''
-
-        if "info" in request.session:
-            if response.context_data is None:
-                response.context_data = {"last_url": request.session["info"]["last_url"]}
-            else:
-                if "last_url" not in response.context_data:
-                    response.context_data["last_url"] = request.session["info"]["last_url"]
+        
+        print("6: ", request.session.get("info"))
+        if response.context_data is None:
+            response.context_data = {"last_url": request.session["info"]["last_url"], "display": request.session["config"]["display"]}
         else:
-            request.context_data["last_url"] = reverse("app-site-nav")
+            response.context_data.setdefault("last_url", request.session["info"]["last_url"]) 
+            display = request.session["config"]["display"] 
+            config_display = [True, False, False]
+            if display == "default_display":
+                config_display = [False, True, False]
+            elif display == "user_display":
+                config_display = [False, False, True]
+            response.context_data.setdefault("config_display", config_display) 
+            print(config_display)
         return response
 
 
@@ -104,12 +118,9 @@ class LoginMiddleware:
         if response.context_data is None:
             response.context_data = {"loggedin": self.loggedin, "user": self.user, "ADMIN_ID": ADMIN_ID}
         else:
-            if "loggedin" not in response.context_data:
-                response.context_data["loggedin"] = self.loggedin
-            if "user" not in response.context_data:
-                response.context_data["user"] = self.user
-            response.context_data["ADMIN_ID"] = ADMIN_ID
-
+            response.context_data.setdefault("loggedin", self.loggedin)
+            response.context_data.setdefault("user", self.user)
+            response.context_data.setdefault("ADMIN_ID", ADMIN_ID)
         return response
 
 

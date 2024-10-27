@@ -177,16 +177,19 @@
     {% endcomment %}
     <div class="position-fixed bottom-0 end-0 mb-3 me-3">
       <div class="collapse my-1" id="collapseConfig">
-        <div class="btn-group" style="" role="group" aria-label="Radio toggle button group of display">
-          <input type="radio" class="btn-check" name="btnradio_display" id="btnradio_alldisplay" autocomplete="on" checked />
-          <label class="btn btn-outline-primary" for="btnradio_alldisplay">展示所有内容</label>
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="btn-group" style="" role="group" aria-label="Radio toggle button group of display">
+            <input type="radio" class="btn-check" name="config_display" id="config_alldisplay" value="all_display" autocomplete="on" {{ config_display.0|yesno:'checked,' }} />
+            <label class="btn btn-outline-primary" for="config_alldisplay">展示所有内容</label>
 
-          <input type="radio" class="btn-check" name="btnradio_display" id="btnradio_defaultdisplay" autocomplete="on" />
-          <label class="btn btn-outline-primary" for="btnradio_defaultdisplay">仅展示默认内容</label>
+            <input type="radio" class="btn-check" name="config_display" id="config_defaultdisplay" value="default_display" autocomplete="on" {{ config_display.1|yesno:'checked,' }} />
+            <label class="btn btn-outline-primary" for="config_defaultdisplay">仅展示默认内容</label>
 
-          <input type="radio" class="btn-check" name="btnradio_display" id="btnradio_userdisplay" autocomplete="on" />
-          <label class="btn btn-outline-primary" for="btnradio_userdisplay">仅展示自定义内容</label>
-        </div>
+            <input type="radio" class="btn-check" name="config_display" id="config_userdisplay" value="user_display" autocomplete="on" {{ config_display.2|yesno:'checked,' }} />
+            <label class="btn btn-outline-primary" for="config_userdisplay">仅展示自定义内容</label>
+          </div>
+        </form>
       </div>
       <div class="d-flex justify-content-end">
         <button class="btn btn-outline-primary py-2 align-items-center" type="button" aria-expanded="false" data-bs-toggle="collapse" data-bs-target="#collapseConfig" aria-label="Toggle display"><span>选项</span></button>
@@ -201,22 +204,29 @@
       // 禁用“确认重新提交表单”
       window.history.replaceState(null, null, window.location.href)
     
-      // 用户自定义内容和默认内容显示选项
-      $(':radio[name="btnradio_display"]').click(function () {
-        if (this.id === 'btnradio_alldisplay') {
+      function config_display(button_id) {
+        if (button_id === 'config_alldisplay') {
           $('.user-id-{{ ADMIN_ID.0 }}').removeClass('user-id-hide')
           $('.user-id-{{ user.id }}').removeClass('user-id-hide')
-        } else if (this.id === 'btnradio_defaultdisplay') {
+        } else if (button_id === 'config_defaultdisplay') {
           $('.user-id-{{ ADMIN_ID.0 }}').removeClass('user-id-hide')
           $('.user-id-{{ user.id }}').addClass('user-id-hide')
-        } else if (this.id === 'btnradio_userdisplay') {
+        } else if (button_id === 'config_userdisplay') {
           $('.user-id-{{ ADMIN_ID.0 }}').addClass('user-id-hide')
           $('.user-id-{{ user.id }}').removeClass('user-id-hide')
         }
     
         $('.user-id-hide,.in-site-categ-hide').hide(200)
         $('.site-categ:not(.user-id-hide,.in-site-categ-hide),.site-nav:not(.user-id-hide,.in-site-categ-hide)').show(200)
+      }
+    
+      // 用户自定义内容和默认内容显示选项
+      $(':radio[name="config_display"]').click(function () {
+        config_display(this.id)
       })
+      window.onload = function () {
+        config_display(window.document.getElementById('collapseConfig').querySelector('[checked]').id)
+      }
     
       // 切换分类
       $('.site-categ').click(function () {
@@ -236,13 +246,35 @@
         $('.user-id-hide,.in-site-categ-hide').hide(200)
         $('.site-nav:not(.user-id-hide,.in-site-categ-hide)').show(200)
       })
+    
+      $('#collapseConfig').click(function () {
+        // 自动收起“选项”
+        $(this).removeClass('show')
+        $('[data-bs-target="#collapseConfig"]').addClass('collapsed')
+    
+        // 不刷新页面提交表单config
+        let xhr = new XMLHttpRequest()
+        xhr.open('POST', '{% url "app-site-nav" %}')
+        const configFormData = new FormData(this.getElementsByTagName('form')['0'])
+        xhr.send(configFormData)
+    
+        // 只是方便控制台检查是否提交成功
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              console.log('Form submitted successfully')
+            } else {
+              console.log('Error submitting form')
+            }
+          }
+        }
+      })
     })
-
+    
     // 设置hover button时字体颜色
     $('.site-nav button').mouseenter(function () {
       $(this).find('h5:first').addClass('text-bg-primary')
     })
-
     $('.site-nav button').mouseleave(function () {
       $(this).find('h5:first').removeClass('text-bg-primary')
     })
