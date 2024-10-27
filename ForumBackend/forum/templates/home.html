@@ -1,5 +1,5 @@
 
-<!-- templates/base.html -->
+<!-- templates/home.html -->
 {% load static %}
 {% load tz %}
 
@@ -9,23 +9,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}论坛{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <link rel="icon" href="{% static 'images/Spider-Man.ico' %}">
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.css' %}">
 </head>
 <body>
+<div class="card">
+<div class="card-header bg-success text-white"></div>
     <header>
-        <h1>欢迎来到论坛主页</h1>
+        <div class="container p-5 my-5 border" style="text-align:center;">
+            <h1 style = "text-align:center";>欢迎来到论坛主页</h1>
+            <form action="{% url 'login' %}" style="display:inline;">
+                <button type="submit" class="btn btn-primary btn-lg">登录</button>
+            </form>
+            <form action="{% url 'register' %}" style="display:inline;">
+                <button type="submit" class="btn btn-success btn-lg">注册</button>
+            </form>
+        </div>
 
-        <nav>
-            <ul>
-                <li><a href="{% url 'register' %}">注册</a></li>
-                <li><a href="{% url 'login' %}">登录</a></li>
-            </ul>
-        </nav>
     </header>
     <main>
         {% block content %}{% endblock %}
     </main>
     <script src="{% static 'js/app.js' %}"></script>
     <script src="{% static 'js/posts.js' %}"></script>
+  <div class="card-footer bg-info text-white"></div>
+</div>
 </body>
 </html>
