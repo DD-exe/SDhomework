@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 from django.utils import timezone
 import pytz
@@ -49,8 +50,24 @@ def home(request):
     return render(request, 'home.html')
 
 def post_list(request):
-    posts = Post.objects.all()  # 查询所有帖子
-    return render(request, 'post_list.html', {'posts': posts})
+    subjects = Subject.objects.all()  # 获取所有主题
+    selected_subject = request.GET.get('subject')  # 从查询参数中获取选中的主题
+
+    # 根据选中的主题过滤帖子
+    if selected_subject:
+        posts = Post.objects.filter(subject__name=selected_subject)
+    else:
+        posts = Post.objects.all()  # 查询所有帖子
+
+    paginator = Paginator(posts, 5)  # 每页显示5个帖子
+    page_number = request.GET.get('page')  # 获取当前页码
+    page_obj = paginator.get_page(page_number)  # 获取对应页面的帖子
+
+    return render(request, 'post_list.html', {
+        'page_obj': page_obj,
+        'subjects': subjects,  # 传递主题列表
+        'selected_subject': selected_subject,  # 传递选中的主题
+    })
 
 @login_required
 def new_post(request):
@@ -59,6 +76,8 @@ def new_post(request):
         content = request.POST.get('content')
         subject_name = request.POST.get('subject')  # 从表单获取主题
         user = request.user
+        print(f"Title: '{title}', Content: '{content}', subject_name: '{subject_name}'")  # 调试输出
+
 
         if title and content:  # 确保标题和内容都不为空
             # 创建或获取主题
@@ -111,7 +130,7 @@ def edit_post(request, post_id):
         subject_name = request.POST.get('subject',"").strip()
         print(f"Title: '{title}', Content: '{content}', subject_name: '{subject_name}'")  # 调试输出
 
-        if title and content and subject_name:
+        if subject_name:
             post.title = title
             post.content = content
 
@@ -123,7 +142,8 @@ def edit_post(request, post_id):
 
             messages.success(request, "帖子已成功更新。")
             return redirect('post_list')  # 编辑成功后重定向到帖子列表
-
+        else:
+            messages.error(request, "主题不能为空")
 
 
     subjects = Subject.objects.all()
