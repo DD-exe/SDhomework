@@ -1,0 +1,22 @@
+@keyframes rainbow {
+    0% { color: red; }
+    14% { color: orange; }
+    28% { color: yellow; }
+    42% { color: green; }
+    57% { color: blue; }
+    71% { color: indigo; }
+    85% { color: violet; }
+    100% { color: red; }
+}
+
+.animated-rainbow-text {
+    animation: rainbow 3s infinite; /* 持续时间和循环 */
+    text-align: center; /* 可选：居中对齐 */
+}
+
+.pagination .page-item {
+    margin: 0 5px;  /* 调整按钮间距 */
+}
+
+
+
