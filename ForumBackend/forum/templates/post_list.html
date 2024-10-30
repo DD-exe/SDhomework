@@ -1,8 +1,9 @@
+
 <!-- templates/post_list.html -->
 {% extends 'base.html' %}
-{%  load static %}
 
 {% load tz %}
+
 {% block content %}
     <form method="GET" class="mb-4 text-center">
         <div class="container">
@@ -33,26 +34,26 @@
                     <div class="col-md-8">  <!-- 设置列宽 -->
                         <div class="p-5 my-5 border">
                             <li>
-                                <h2 class="text-center"><code class="fw-bold">{{ post.title }}</code></h2>
+                                <h2 class="text-center mb-3"><code class="fw-bold">{{ post.title }}</code></h2>
                             </li>
                             <div class="input-group mb-3">
-                                <span class="input-group-text">发帖主题 </span>
+                                <span class="input-group-text"> &ensp;主&ensp;&ensp;题&ensp; </span>
                                 <input readonly class="form-control text-center" value="{{ post.subject }}">
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text">帖子内容 </span>
+                                <span class="input-group-text"> &ensp;内&ensp;&ensp;容&ensp; </span>
                                 <textarea readonly class="form-control text-center" style="height: 38px;">{{ post.content }}</textarea>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text">发帖用户 </span>
+                                <span class="input-group-text"> &ensp;用&ensp;&ensp;户&ensp; </span>
                                 <input readonly class="form-control text-center" value="{{ post.user.username }}">
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text">发帖时间 </span>
+                                <span class="input-group-text"> 发帖时间 </span>
                                 <input readonly class="form-control text-center" value="{{ post.created_at }}">
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text">最后更新 </span>
+                                <span class="input-group-text"> 最后更新 </span>
                                 <input readonly class="form-control text-center" value="{{ post.updated_at }}">
                             </div>
                             <div style="text-align:center;">
@@ -125,8 +126,6 @@
     }
 </script>
 
-<link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.css' %}">
-<link rel="stylesheet" href="{% static 'css/bastyle.css' %}">
 </ul>
 {% endblock %}
 
