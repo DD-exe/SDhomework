@@ -1,9 +1,6 @@
+
 <!-- templates/new_post.html -->
-
-<!DOCTYPE html>
 {% extends 'base.html' %}
-
-{%  load static %}
 
 {% block content %}
     <h2 class = "fw-bold text-center">新建帖子</h2>
@@ -40,12 +37,9 @@
 </div>
 
 <div class="card shadow">
-        <div class="card-footer info">
-            <h1 style="text-align:center"><code>THAT'S THE END</code></h1>
+        <div class="card-footer bg-light">
+            <h1 class="text-center"><code>THAT'S THE END</code></h1>
         </div>
 </div>
-<link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.css' %}">
-
-<script src="{% static 'js/CustomizeSubject.js' %}"></script>
 
 {% endblock %}
