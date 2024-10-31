@@ -1,0 +1,207 @@
+@charset "utf-8";
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    <!-- background: url() no-repeat; -->
+    background-size: cover;
+}
+
+.box {
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 350px;
+    /*height: 420px;*/
+    height: auto;
+    border-top: 1px solid rgba(255,255,255,0.5);
+    border-left: 1px solid rgba(255,255,255,0.5);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    border-right: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    background: rgba(50,50,50,0.2);
+    padding-top:10px;
+    padding-bottom: 10px;
+}
+
+.box > h2 {
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 15px;
+    margin-top: 10px;
+}
+
+.box .input-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.box .input-box > label {
+    margin-bottom: 5px;
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+}
+
+.box .input-box >div > label {
+    margin-bottom: 5px;
+    color: rgba(255,255,255,0.9);
+    font-size: 13px;
+    text-decoration-line: blink;
+}
+
+.box .input-box  input {
+    box-sizing: border-box;
+    color: rgba(255,255,255,0.9);
+    font-size: 15px;
+    height: 35px;
+    width: 250px;
+    background: rgba(255,255,255,0.3);
+    border: 1px solid rgba(255,255,255,0.5);
+    border-radius: 5px;
+    transition: 0.2s;
+    outline: none;
+    padding: 0 10px;
+    letter-spacing: 1px;
+    vertical-align:middle;
+}
+.box .input-box  input::placeholder{
+    font-size: 13px;
+    color:darkgrey;
+}
+
+.box .input-box  input:focus {
+    /*border: 1px solid rgba(255,255,255,0.8);*/
+    border: 2px solid dodgerblue;
+}
+
+.box .input-box  img{
+    vertical-align:middle;
+    width: 120px;
+    align-self: end;
+}
+
+.box .btn-box {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+}
+
+.box .btn-box > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    #text-align: center;
+    margin-top: 10px;
+}
+
+.box .btn-box > div > button {
+    width: 120px;
+    height: 35px;
+    border: 1px solid rgba(197, 81, 58,0.8);
+    background: rgba(197, 81, 58,0.5);
+    color: rgba(255,255,255,0.9);
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.box .btn-box > div > button:nth-of-type(2) {
+    margin-left: 10px;
+}
+
+.box .btn-box > div > button:hover {
+    border: 1px solid rgba(248, 108, 76,0.8);
+    background: rgba(248, 108, 76,0.5);
+}
+
+#remember {
+    display: inline-block;
+    font-size: 14px;
+    color: rgba(255,255,255,0.9);
+    width: 120px;
+    vertical-align: middle;
+    text-align: left;
+    margin-top:-2px;
+    margin-left: 5px;
+}
+
+.box .btn-box > div > a {
+    font-size: 13px;
+    text-decoration: none;
+    color: rgba(255,255,255,0.9);
+    transition: 0.2s;
+    width: 250px;
+    text-align: end;
+    vertical-align: middle;
+    margin-top:-2px;
+}
+
+.box .btn-box > div > a:hover {
+    color: darkgrey;
+}
+
+.wrong{
+    font-size: 13px;
+    color:red;
+    text-align: start;
+    width:250px;
+}
+
+.tips{
+    width: 140px;
+    position: absolute;
+    left: 260px;
+    top: 7px;
+    border: 1px solid #c2c2c2;
+    background-color: white;
+    padding: 5px;
+    font-size: 12px;
+    color:#666;
+    font-weight: normal;
+    display:none;
+}
+.arrow1, .arrow2{
+    position: absolute;
+    left: -13px;
+    top: 25px;
+    border-top: 6px transparent dashed;
+    border-left: 6px transparent dashed;
+    border-bottom: 6px transparent dashed;
+    border-right: 6px solid #c2c2c2;
+}
+
+.arrow2{
+    left: -12px;/*这里很重要,相当于比原来的三角右移了一个像素*/
+    border-right: 6px white solid;/*用白色的三角覆盖掉灰色的三角*/
+ }
+
+.tips .tip1, .tips .tip2{
+    padding-left:16px;
+}
+
+.tips .point{
+    position: absolute;
+    left: 4px;
+    margin-top: 4px;
+    font-size: 40px;
+    line-height: 12px;
+}
+
+input:focus + .tips{
+    display: block;
+}
