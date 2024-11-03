@@ -4,7 +4,7 @@ from django.urls import reverse, resolve
 from ..models import SiteCategory, SiteNav
 from .. import views
 from ..utils import utils
-from ..config import UserAPI, ADMIN_ID, IS_SITE_NAV_DEBUG
+from ..config import UserAPI, IS_SITE_NAV_DEBUG
 
 # 在“root.html”中的参数，在中间件的`process_template_response`中赋值
 
@@ -90,25 +90,23 @@ class LoginMiddleware:
 
     此外，对于视图函数返回的`TemplateResponse`添加部分登录相关的渲染参数，用来区分未登录和已登录的html界面，从而减少html模板和视图函数的编写
     '''
+    # 登录可访问的地址
+    # 有些url含有参数，无法在此处reverse
+    # loggedin_paths = [reverse("site_nav:site-list"), reverse("site_nav:site-add"), reverse("site_nav:site-edit"), reverse("site_nav:site-delete"),
+    #                   reverse("site_nav:categ-list"), reverse("site_nav:categ-add"), reverse("site_nav:categ-edit"), reverse("site_nav:categ-delete")]
+    loggedin_views = [views.site_nav_list, views.site_nav_add, views.site_nav_edit, views.site_nav_delete,
+                      views.site_categ_list, views.site_categ_add, views.site_categ_edit, views.site_categ_delete]
 
     def __init__(self, get_response):
-        self.loggedin = False
         self.get_response = get_response
-
-        print(UserAPI.login_url_name())
-        print(UserAPI.logout_url_name())
-        # 未登录可访问的地址
-        self.except_paths = [reverse(UserAPI.login_url_name()), reverse("site_nav:default"),
-                        reverse(UserAPI.logout_url_name())]
 
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         # 用于判断用户是否登录，若为None，则未登录
         self.user = UserAPI(request)
-        self.loggedin = self.user.is_authenticated
-        if not self.loggedin and request.path_info not in self.except_paths:
-            return redirect(reverse(UserAPI.login_url_name()))
+        # if not self.user.is_authenticated and request.path_info not in self.loggedin_paths:
+        #     return redirect(reverse(UserAPI.login_url_name()))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -118,9 +116,13 @@ class LoginMiddleware:
         # the view is called.
         return response
 
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if not self.user.is_authenticated and view_func in self.loggedin_views:
+            return redirect(reverse(UserAPI.login_url_name()))
+
     def process_template_response(self, request, response):
         '''
-        添加渲染参数：loggedin, user, ADMIN_ID
+        添加渲染参数：loggedin, user
 
         中间件的hook函数，django自动调用，无需显式地调用
 
@@ -130,11 +132,9 @@ class LoginMiddleware:
         '''
 
         if response.context_data is None:
-            response.context_data = {"loggedin": self.loggedin, "user": self.user, "ADMIN_ID": ADMIN_ID}
+            response.context_data = {"user": self.user}
         else:
-            response.context_data.setdefault("loggedin", self.loggedin)
             response.context_data.setdefault("user", self.user)
-            response.context_data.setdefault("ADMIN_ID", ADMIN_ID)
         return response
 
 
@@ -151,11 +151,10 @@ class AdminMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        user = request.session.get("user", dict())
-        user_id = user.get("id")
+        user = UserAPI(request)
         # 试图访问管理员权限的路径，且不是管理员
-        if request.path_info in self.admin_paths and (user_id is None or user_id not in ADMIN_ID):
-            return redirect(reverse(""))
+        if request.path_info in self.admin_paths and (user.id is None or not user.is_superuser):
+            return redirect(reverse(UserAPI.login_url_name()))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -194,8 +193,8 @@ class UserMiddleware:
             # 不是访问敏感路径
             return
 
-        user_id = UserAPI(request).id 
-        if user_id in ADMIN_ID:
+        user = UserAPI(request)
+        if user.is_superuser:
             # 管理员可随意修改
             return
 
@@ -203,11 +202,11 @@ class UserMiddleware:
         if data_id is not None:
             if view_func in self.site_nav_views:
                 data = SiteNav.objects.filter(id=data_id).first()
-                if data is not None and user_id == data.user_id:
+                if data is not None and user.id == data.user_id:
                     return 
             else: # view_func in self.site_categ_views
                 data = SiteCategory.objects.filter(id=data_id).first()
-                if data is not None and user_id == data.user_id:
+                if data is not None and user.id == data.user_id:
                     return                
         # 用户试图修改或删除非自己的数据
         return redirect(reverse("site_nav:default"))

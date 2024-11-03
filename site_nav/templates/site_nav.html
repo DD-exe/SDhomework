@@ -206,13 +206,19 @@
     
       function config_display(button_id) {
         if (button_id === 'config_alldisplay') {
-          $('.user-id-{{ ADMIN_ID.0 }}').removeClass('user-id-hide')
+          {% for id in user.default_user_ids %}
+            $('.user-id-{{ id }}').removeClass('user-id-hide')
+          {% endfor %}
           $('.user-id-{{ user.id }}').removeClass('user-id-hide')
         } else if (button_id === 'config_defaultdisplay') {
-          $('.user-id-{{ ADMIN_ID.0 }}').removeClass('user-id-hide')
+          {% for id in user.default_user_ids %}
+            $('.user-id-{{ id }}').removeClass('user-id-hide')
+          {% endfor %}
           $('.user-id-{{ user.id }}').addClass('user-id-hide')
         } else if (button_id === 'config_userdisplay') {
-          $('.user-id-{{ ADMIN_ID.0 }}').addClass('user-id-hide')
+          {% for id in user.default_user_ids %}
+            $('.user-id-{{ id }}').addClass('user-id-hide')
+          {% endfor %}
           $('.user-id-{{ user.id }}').removeClass('user-id-hide')
         }
     

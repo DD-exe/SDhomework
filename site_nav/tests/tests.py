@@ -30,6 +30,8 @@ if IS_SITE_NAV_TEST:
 
 
     class UserAPI():
+        _admin_ids = [1]
+
         def __init__(self, request):
             self.request = request
 
@@ -43,7 +45,11 @@ if IS_SITE_NAV_TEST:
 
         @property
         def is_authenticated(self):
-            return True if self.request.session.get("user") else False
+            return self.request.session.get("user") is not None
+
+        @property
+        def is_superuser(self):
+            return self.id in self._admin_ids    
 
         @staticmethod
         def login_url_name():
@@ -53,3 +59,6 @@ if IS_SITE_NAV_TEST:
         def logout_url_name():
             return "site_nav:logout"
 
+        @staticmethod
+        def default_user_ids():
+            return [1]

@@ -12,7 +12,7 @@ if IS_SITE_NAV_TEST:
     def login(request):
         if request.method == "GET":
             form = LoginForm()
-            return TemplateResponse(request, "login.html", {"form": form})
+            return TemplateResponse(request, "test_login.html", {"form": form})
 
         elif request.method == "POST":
             form = LoginForm(data=request.POST)
@@ -28,9 +28,9 @@ if IS_SITE_NAV_TEST:
                     return redirect(request.session["info"]["last_url"])
                 else:
                     form.add_error(None, "登录失败")
-                    return TemplateResponse(request, "login.html", {"form": form})
+                    return TemplateResponse(request, "test_login.html", {"form": form})
             else:
-                return TemplateResponse(request, "login.html", {"form": form, "was_validated": "was-validated"})
+                return TemplateResponse(request, "test_login.html", {"form": form, "was_validated": "was-validated"})
 
 
     def logout(request):

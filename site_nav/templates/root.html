@@ -37,7 +37,7 @@
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                {% if user.id in ADMIN_ID %}
+                {% if user.is_superuser %}
                   <li>
                     <a class="dropdown-item" href="{% url 'site_nav:categ-list' %}">分类列表</a>
                   </li>
@@ -62,7 +62,7 @@
                 <button class="btn btn-outline-success" type="submit">Search</button>
               </form>
             </li>
-            {% if not loggedin %}
+            {% if not user.is_authenticated %}
               <li class="nav-item d-flex mx-2">
                 <a class="nav-link" href="{% url user.login_url_name %}">登录</a>
               </li>

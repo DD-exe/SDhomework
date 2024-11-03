@@ -1,16 +1,13 @@
 from urllib.parse import urlparse
 
-from django.core.files.base import File
-from django.db.models.base import Model
 from django.forms.utils import ErrorList
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import redirect, HttpResponse
 from django import forms
-from django.urls import reverse, resolve
 from django.template.response import TemplateResponse
 
 from .models import SiteCategory, SiteNav
 from .utils import utils
-from .config import UserAPI, IS_SITE_NAV_DEBUG, ADMIN_ID
+from .config import UserAPI
 
 
 def add_classes(form, fields: list | str = "__all__", classes_to_add: str | dict = {"input_class": "form-control", "select_class": "form-select"}) -> None:
@@ -229,8 +226,8 @@ class SiteCategoryAdminForm(BootStrapModelForm):
         fields = "__all__"
 
 
-def SiteCategoryForm(user_id, *args, **kwargs):
-    return SiteCategoryOriginForm(user_id, *args, **kwargs) if user_id not in ADMIN_ID else SiteCategoryAdminForm(*args, **kwargs)
+def SiteCategoryForm(user:UserAPI, *args, **kwargs):
+    return SiteCategoryOriginForm(user.id, *args, **kwargs) if not user.is_superuser else SiteCategoryAdminForm(*args, **kwargs)
 
 
 class SiteNavOriginForm(BootStrapModelForm):
@@ -262,7 +259,7 @@ class SiteNavOriginForm(BootStrapModelForm):
         '''
         Args:
             user_id: 当前用户的id，用于限制下拉选择框的内容。
-                     `user_id=id` 解析为 `constraints={"category": {"user_id__in": [id, ADMIN_ID[0]]}, <other constraints>}`
+                     `user_id=id` 解析为 `constraints={"category": {"user_id__in": [id, *UserAPI.default_user_ids()]}, <other constraints>}`
             constraints (dict): `constrain_select`参数
         '''
         super().__init__(
@@ -280,11 +277,11 @@ class SiteNavOriginForm(BootStrapModelForm):
             renderer,
         )
         self.user_id = user_id
-        if "category" not in constraints:
-            # ADMIN_ID[0]: 包含默认用户的分类
-            constraints["category"] = {"user_id__in": [user_id, ADMIN_ID[0]]}
-        elif "user_id__in" not in constraints["category"]:
-            constraints["category"]["user_id__in"] = [user_id, ADMIN_ID[0]]
+        # if "category" not in constraints:
+        #     constraints["category"] = {"user_id__in": [user_id, *UserAPI.default_user_ids()]}
+        # elif "user_id__in" not in constraints["category"]:
+        #     constraints["category"]["user_id__in"] = [user_id, *UserAPI.default_user_ids()]
+        utils.set_default_dd(constraints, "category", {"user_id__in": [user_id, *UserAPI.default_user_ids()]})
         constrain_select(self, constraints)
 
     def is_valid(self) -> bool:
@@ -327,16 +324,14 @@ class SiteNavAdminForm(BootStrapModelForm):
         fields = "__all__"
 
 
-def SiteNavForm(user_id, constraints=dict(), *args, **kwargs):
-    return SiteNavOriginForm(user_id, constraints, *args, **kwargs) if user_id not in ADMIN_ID else SiteNavAdminForm(*args, **kwargs)
+def SiteNavForm(user: UserAPI, constraints=dict(), *args, **kwargs):
+    return SiteNavOriginForm(user.id, constraints, *args, **kwargs) if not user.is_superuser else SiteNavAdminForm(*args, **kwargs)
 
 
 def site_nav(request):
     if request.method == "GET":
-        # 获取当前用户id，id为ADMIN_ID[0]表示默认用户，显示未登录可以显示的信息
-        id_filter = []
-
-        id_filter.append(ADMIN_ID[0])
+        # 获取当前用户id，id在UserAPI.default_user_ids()中表示默认用户，显示未登录可以显示的信息
+        id_filter = UserAPI.default_user_ids()
 
         user_id = UserAPI(request).id
         if user_id is not None:
@@ -362,13 +357,13 @@ def site_nav_add(request):
     op_title = "新增网站"
 
     if request.method == "GET":
-        form = SiteNavForm(user_id=UserAPI(request).id)
+        form = SiteNavForm(user=UserAPI(request))
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         form = SiteNavForm(
-            user_id=UserAPI(request).id, data=request.POST)
+            user=UserAPI(request), data=request.POST)
 
         if form.is_valid():
             form.save()
@@ -384,14 +379,14 @@ def site_nav_edit(request, id):
     obj = SiteNav.objects.filter(id=id).first()
 
     if request.method == "GET":
-        form = SiteNavForm(user_id=UserAPI(request).id, instance=obj)
+        form = SiteNavForm(user=UserAPI(request), instance=obj)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         # 与add区别是：`instance`
         form = SiteNavForm(
-            user_id=UserAPI(request).id, data=request.POST, instance=obj)
+            user=UserAPI(request), data=request.POST, instance=obj)
 
         if form.is_valid():
             form.save()
@@ -418,13 +413,13 @@ def site_categ_add(request):
     op_title = "新增分类"
 
     if request.method == "GET":
-        form = SiteCategoryForm(user_id=UserAPI(request).id)
+        form = SiteCategoryForm(user=UserAPI(request))
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         form = SiteCategoryForm(
-            user_id=UserAPI(request).id, data=request.POST)
+            user=UserAPI(request), data=request.POST)
 
         if form.is_valid():
             form.save()
@@ -441,14 +436,14 @@ def site_categ_edit(request, id):
 
     if request.method == "GET":
         form = SiteCategoryForm(
-            user_id=UserAPI(request).id, instance=obj)
+            user=UserAPI(request), instance=obj)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         # 与add区别是：`instance`
         form = SiteCategoryForm(
-            user_id=UserAPI(request).id, data=request.POST, instance=obj)
+            user=UserAPI(request), data=request.POST, instance=obj)
 
         if form.is_valid():
             form.save()
