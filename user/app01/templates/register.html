@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Register</title>
+    <title>注册</title>
     <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}"/>
 </head>
 
@@ -25,10 +25,10 @@
         <div class="input-box">
             <label>邮箱</label>
             {{ form.email }}
-            <div  class="tips" style="top: 25px;width: 130px">
-            <span class="arrow1" style="top: 8px"></span>
-                <span class="arrow2" style="top: 8px"></span>
-            <p class="tip1" style="padding-left: 5px"><span class="point"> </span>邮箱仅用于账号的找回</p>
+            <div  class="tips" style="top: 18px;width: 130px">
+            <span class="arrow1" style="top: 14px"></span>
+                <span class="arrow2" style="top: 14px"></span>
+            <p class="tip1" style="padding-left: 5px"><span class="point"> </span>邮箱用于账号的激活和找回</p>
             </div>
             <span class ="wrong">{{ form.email.errors.0 }}</span>
         </div>

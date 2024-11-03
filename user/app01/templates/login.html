@@ -3,7 +3,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>登录</title>
     <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}"/>
 </head>
 <body>
@@ -51,6 +51,13 @@
 
             </div>
         </div>
+        {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg.message }}');
+            {% endfor %}
+        </script>
+        {% endif %}
     </div> 
 </body>
 {#<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}

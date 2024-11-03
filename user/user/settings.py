@@ -127,3 +127,17 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# 邮箱配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp-mail.outlook.com'  # 例如 smtp.gmail.com
+# EMAIL_HOST = 'smtp.office365.com'
+EMAIL_HOST = 'smtp.163.com'  # 例如 smtp.gmail.com
+EMAIL_PORT = '25'  # 或者你使用的端口号
+# EMAIL_HOST_USER = 'is-web@outlook.com'  # 你的邮箱
+EMAIL_HOST_USER = 'nisweb@163.com'
+EMAIL_HOST_PASSWORD = 'LSjb8S4JxkegihC9'  # 你的邮箱密码
+EMAIL_USE_TLS = True  # 使用TLS安全连接
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 默认发件人邮箱
+#   yyqldjgogzlsnsdx NZjMb3BkZUt5jy9y  LSjb8S4JxkegihC9
+
