@@ -1,8 +1,9 @@
 from django.shortcuts import redirect, HttpResponse
 from django.urls import reverse, resolve
-from app.models import User, SiteCategory, SiteNav, ADMIN_ID
-from app import views
-from app.utils import utils
+
+from ..models import User, SiteCategory, SiteNav, ADMIN_ID
+from .. import views
+from ..utils import utils
 
 # 在“root.html”中的参数，在中间件的`process_template_response`中赋值
 
@@ -24,14 +25,14 @@ class InfoMiddleware:
 
             print("0: ", request.session.get("info"))
             # 若没有，则创建
-            utils.set_default_session(request.session, "info", {"current_url": request.path_info, "last_url": reverse("app-site-nav")})
+            utils.set_default_session(request.session, "info", {"current_url": request.path_info, "last_url": reverse("site_nav:default")})
             print("1: ", request.session.get("info"))
             # 只有不同才改
             if request.session["info"]["current_url"] != request.path_info:
                 utils.update_session(request.session, "info", {"current_url": request.path_info, "last_url": request.session["info"]["current_url"]})
                 print("3: ", request.session.get("info"))
         else:
-            utils.set_default_session(request.session, "info", {"current_url": reverse("app-site-nav"), "last_url": reverse("app-site-nav")})
+            utils.set_default_session(request.session, "info", {"current_url": reverse("site_nav:default"), "last_url": reverse("site_nav:default")})
         
         print("4: ", request.session.get("info"))
         # config
@@ -81,8 +82,8 @@ class LoginMiddleware:
     '''
 
     # 未登录可访问的地址
-    except_paths = [reverse("app-login"), reverse("app-site-nav"),
-                    reverse("app-logout"), reverse("app-backup-site-nav")]
+    except_paths = [reverse("site_nav:login"), reverse("site_nav:default"),
+                    reverse("site_nav:logout")]
 
     def __init__(self, get_response):
         self.loggedin = False
@@ -96,7 +97,7 @@ class LoginMiddleware:
         self.user = request.session.get("user", {})
         self.loggedin = True if self.user != {} else False
         if not self.loggedin and request.path_info not in self.except_paths:
-            return redirect(reverse("app-login"))
+            return redirect(reverse("site_nav:login"))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -129,7 +130,7 @@ class AdminMiddleware:
     判断是否是管理员访问敏感路径
     '''
 
-    admin_paths = [reverse("app-site-nav-list"), reverse("app-site-categ-list")]
+    admin_paths = [reverse("site_nav:site-list"), reverse("site_nav:categ-list")]
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -141,7 +142,7 @@ class AdminMiddleware:
         user_id = user.get("id")
         # 试图访问管理员权限的路径，且不是管理员
         if request.path_info in self.admin_paths and (user_id is None or user_id not in ADMIN_ID):
-            return redirect(reverse("app-site-nav"))
+            return redirect(reverse(""))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -184,7 +185,7 @@ class UserMiddleware:
         user_id = user.get("id")
         if user_id is None:
             # 未登录
-            return redirect(reverse("app-login"))
+            return redirect(reverse("site_nav:login"))
 
         if user_id in ADMIN_ID:
             # 管理员可随意修改
@@ -201,4 +202,4 @@ class UserMiddleware:
                 if data is not None and user_id == data.user_id:
                     return                
         # 用户试图修改或删除非自己的数据
-        return redirect(reverse("app-site-nav"))
+        return redirect(reverse("site_nav:default"))

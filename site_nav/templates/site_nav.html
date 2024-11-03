@@ -38,8 +38,8 @@
                     </div>
                     <div class="col-4">
                       <div class="d-grid gap-2">
-                        {% url 'app-site-categ-edit' id=obj.id as edit_categ_url %}
-                        {% url 'app-site-categ-delete' id=obj.id as delete_categ_url %}
+                        {% url 'site_nav:categ-edit' id=obj.id as edit_categ_url %}
+                        {% url 'site_nav:categ-delete' id=obj.id as delete_categ_url %}
                         <button type="button" class="btn btn-primary" onclick="window.location.href='{{ edit_categ_url }}';">编辑</button>
                         <!-- 注意id之间的对应关系，且id必须unique -->
                         <!-- Button trigger modal -->
@@ -72,7 +72,7 @@
           </div>
         {% endfor %}
         <li class="nav-item">
-          <h5><a href="{% url 'app-site-categ-add' %}" class="nav-link">新增分类</a></h5>
+          <h5><a href="{% url 'site_nav:categ-add' %}" class="nav-link">新增分类</a></h5>
         </li>
       </ul>
     </div>
@@ -120,8 +120,8 @@
                     <div class="col-4">
                       <div class="">
                         <div class="d-grid gap-2">
-                          {% url 'app-site-nav-edit' id=obj.id as edit_nav_url %}
-                          {% url 'app-site-nav-delete' id=obj.id as delete_nav_url %}
+                          {% url 'site_nav:site-edit' id=obj.id as edit_nav_url %}
+                          {% url 'site_nav:site-delete' id=obj.id as delete_nav_url %}
                           <button type="button" class="btn btn-primary" onclick="window.location.href='{{ edit_nav_url }}';">编辑</button>
                           <!-- 注意id之间的对应关系，且id必须unique -->
                           <!-- Button trigger modal -->
@@ -158,7 +158,7 @@
           </div>
         {% endfor %}
         <div class="p-2" style="margin-top: 2px;">
-          <button type="button" class="btn btn-outline-primary w-100 p-0 overflow-hidden" style="height: 60px;" onclick="window.location.href='{% url 'app-site-nav-add' %}'">
+          <button type="button" class="btn btn-outline-primary w-100 p-0 overflow-hidden" style="height: 60px;" onclick="window.location.href='{% url 'site_nav:site-add' %}'">
             <div class="row">
               <div class="col-3 p-0">
                 <div class="ms-2 border-end border-primary" style="height: 60px;"></div>
@@ -254,7 +254,7 @@
     
         // 不刷新页面提交表单config
         let xhr = new XMLHttpRequest()
-        xhr.open('POST', '{% url "app-site-nav" %}')
+        xhr.open('POST', '{% url "site_nav:default" %}')
         const configFormData = new FormData(this.getElementsByTagName('form')['0'])
         xhr.send(configFormData)
     

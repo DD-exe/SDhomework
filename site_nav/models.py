@@ -2,7 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.core import validators
 from django.core.exceptions import ValidationError
-from app.utils import utils
+
+from .utils import utils
 
 # IS_APP_DEBUG = True
 IS_APP_DEBUG = False
@@ -144,7 +145,6 @@ class SiteNav(models.Model):
     weight = models.IntegerField(verbose_name="网站的权重", default=0, blank=True)
     description = models.TextField(
         verbose_name="网站的描述", max_length=200, default="", blank=True)
-    # TODO: 网站图片：自动爬取
 
     class Meta:
         verbose_name = "网站"

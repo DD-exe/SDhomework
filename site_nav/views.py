@@ -1,4 +1,5 @@
 from urllib.parse import urlparse
+
 from django.core.files.base import File
 from django.db.models.base import Model
 from django.forms.utils import ErrorList
@@ -6,8 +7,9 @@ from django.shortcuts import render, redirect, HttpResponse
 from django import forms
 from django.urls import reverse, resolve
 from django.template.response import TemplateResponse
-from app.models import User, SiteCategory, SiteNav, IS_APP_DEBUG, ADMIN_ID
-from app.utils import utils
+
+from .models import User, SiteCategory, SiteNav, IS_APP_DEBUG, ADMIN_ID
+from .utils import utils
 
 
 def add_classes(form, fields: list | str = "__all__", classes_to_add: str | dict = {"input_class": "form-control", "select_class": "form-select"}) -> None:
@@ -365,7 +367,7 @@ def login(request):
 
 def logout(request):
     request.session.flush()
-    return redirect(reverse("app-login"))
+    return redirect(reverse("site_nav:login"))
 
 
 def site_nav(request):

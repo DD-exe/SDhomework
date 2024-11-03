@@ -25,6 +25,7 @@ SECRET_KEY = "django-insecure-q$1c(5w9-&b7#n^_w2k61_kj&x!=t9ak*8st98esqh7)l#3*01
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
+# DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -38,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "app.apps.AppConfig",
+    "site_nav.apps.SiteNavConfig",
 ]
 
 MIDDLEWARE = [
@@ -49,10 +50,10 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "app.middleware.auth.InfoMiddleware",
-    "app.middleware.auth.LoginMiddleware",
-    "app.middleware.auth.AdminMiddleware",
-    "app.middleware.auth.UserMiddleware",
+    "site_nav.middleware.auth.InfoMiddleware",
+    "site_nav.middleware.auth.LoginMiddleware",
+    "site_nav.middleware.auth.AdminMiddleware",
+    "site_nav.middleware.auth.UserMiddleware",
 ]
 
 ROOT_URLCONF = "web_project.urls"
@@ -127,7 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "app/static/")
+STATIC_ROOT = os.path.join(BASE_DIR, "site_nav/static/")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

@@ -1,6 +1,7 @@
 import requests  
 from bs4 import BeautifulSoup  
 from urllib.parse import urlparse
+
 from django.urls import resolve, reverse
 
 
@@ -79,9 +80,9 @@ def get_prev_url(request):
     '''
     previous = request.headers.get("Referer")
     if previous is None:
-        previous = reverse("app-site-nav") 
+        previous = reverse("site_nav:default") 
     else:
         previous = urlparse(previous)[2]
-        previous = reverse("app-site-nav") if previous == request.path_info else previous
+        previous = reverse("site_nav:default") if previous == request.path_info else previous
     return previous
 

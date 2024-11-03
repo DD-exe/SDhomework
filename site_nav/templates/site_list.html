@@ -9,9 +9,9 @@
       <div class="card-body">
         <!-- 反向解析url, 但不显示 -->
         {% if name == '网站' %}
-          {% url 'app-site-nav-add' as add_url %}
+          {% url 'site_nav:site-add' as add_url %}
         {% elif name == '分类' %}
-          {% url 'app-site-categ-add' as add_url %}
+          {% url 'site_nav:categ-add' as add_url %}
         {% endif %}
         <button type="button" class="btn btn-success" onclick="window.location.href='{{ add_url }}';">新增{{ name }}</button>
       </div>
@@ -45,11 +45,11 @@
                 <td>
                   <div class="d-inline-flex gap-1">
                     {% if name == '网站' %}
-                      {% url 'app-site-nav-edit' id=obj.id as edit_url %}
-                      {% url 'app-site-nav-delete' id=obj.id as delete_url %}
+                      {% url 'site_nav:site-edit' id=obj.id as edit_url %}
+                      {% url 'site_nav:site-delete' id=obj.id as delete_url %}
                     {% elif name == '分类' %}
-                      {% url 'app-site-categ-edit' id=obj.id as edit_url %}
-                      {% url 'app-site-categ-delete' id=obj.id as delete_url %}
+                      {% url 'site_nav:categ-edit' id=obj.id as edit_url %}
+                      {% url 'site_nav:categ-delete' id=obj.id as delete_url %}
                     {% endif %}
                     <button type="button" class="btn btn-primary" onclick="window.location.href='{{ edit_url }}';">编辑</button>
                     <!-- 注意id之间的对应关系，且id必须unique -->

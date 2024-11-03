@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=64, verbose_name='分类名')),
                 ('weight', models.IntegerField(blank=True, default=0, verbose_name='分类的权重')),
                 ('description', models.TextField(blank=True, default='', max_length=200, verbose_name='分类的描述')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.user', verbose_name='用户')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='site_nav.user', verbose_name='用户')),
             ],
             options={
                 'verbose_name': '分类',
@@ -47,8 +47,8 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(blank=True, default='', max_length=64, verbose_name='网站名')),
                 ('weight', models.IntegerField(blank=True, default=0, verbose_name='网站的权重')),
                 ('description', models.TextField(blank=True, default='', max_length=200, verbose_name='网站的描述')),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.sitecategory', verbose_name='网站的分类')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='app.user', verbose_name='用户')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='site_nav.sitecategory', verbose_name='网站的分类')),
+                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='site_nav.user', verbose_name='用户')),
             ],
             options={
                 'verbose_name': '网站',
