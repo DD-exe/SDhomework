@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, HttpResponse
 from django.urls import reverse, resolve
 
-from ..models import User, SiteCategory, SiteNav, ADMIN_ID
+from ..models import User, SiteCategory, SiteNav, ADMIN_ID, IS_SITE_NAV_DEBUG
 from .. import views
 from ..utils import utils
 
@@ -22,22 +22,26 @@ class InfoMiddleware:
         # the view (and later middleware) are called.
         if resolve(request.path_info).func.__name__ in dir(views):
             # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
-
-            print("0: ", request.session.get("info"))
+            if IS_SITE_NAV_DEBUG:
+                print("0: ", request.session.get("info"))
             # 若没有，则创建
             utils.set_default_session(request.session, "info", {"current_url": request.path_info, "last_url": reverse("site_nav:default")})
-            print("1: ", request.session.get("info"))
+            if IS_SITE_NAV_DEBUG:
+                print("1: ", request.session.get("info"))
             # 只有不同才改
             if request.session["info"]["current_url"] != request.path_info:
                 utils.update_session(request.session, "info", {"current_url": request.path_info, "last_url": request.session["info"]["current_url"]})
-                print("3: ", request.session.get("info"))
+            if IS_SITE_NAV_DEBUG:
+                    print("3: ", request.session.get("info"))
         else:
             utils.set_default_session(request.session, "info", {"current_url": reverse("site_nav:default"), "last_url": reverse("site_nav:default")})
         
-        print("4: ", request.session.get("info"))
+        if IS_SITE_NAV_DEBUG:
+            print("4: ", request.session.get("info"))
         # config
         utils.set_default_session(request.session, "config", {"display": "all_display"})
-        print(request.session.get("config"))
+        if IS_SITE_NAV_DEBUG:
+            print(request.session.get("config"))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -56,7 +60,8 @@ class InfoMiddleware:
         若视图函数返回`HttpResponse`，则此函数不会被调用，因此如果希望此函数被调用，需要修改视图函数返回对象
         '''
         
-        print("6: ", request.session.get("info"))
+        if IS_SITE_NAV_DEBUG:
+            print("6: ", request.session.get("info"))
         if response.context_data is None:
             response.context_data = {"last_url": request.session["info"]["last_url"], "display": request.session["config"]["display"]}
         else:
@@ -68,7 +73,8 @@ class InfoMiddleware:
             elif display == "user_display":
                 config_display = [False, False, True]
             response.context_data.setdefault("config_display", config_display) 
-            print(config_display)
+            if IS_SITE_NAV_DEBUG:
+                print(config_display)
         return response
 
 

@@ -1,0 +1,2 @@
+# ignore static files generated during deployment
+site_nav/static/admin

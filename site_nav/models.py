@@ -5,8 +5,8 @@ from django.core.exceptions import ValidationError
 
 from .utils import utils
 
-# IS_APP_DEBUG = True
-IS_APP_DEBUG = False
+# IS_SITE_NAV_DEBUG = True
+IS_SITE_NAV_DEBUG = False
 ADMIN_ID = [1]
 
 

@@ -8,7 +8,7 @@ from django import forms
 from django.urls import reverse, resolve
 from django.template.response import TemplateResponse
 
-from .models import User, SiteCategory, SiteNav, IS_APP_DEBUG, ADMIN_ID
+from .models import User, SiteCategory, SiteNav, IS_SITE_NAV_DEBUG, ADMIN_ID
 from .utils import utils
 
 
