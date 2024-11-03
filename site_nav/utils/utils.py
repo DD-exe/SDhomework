@@ -1,8 +1,5 @@
 import requests  
 from bs4 import BeautifulSoup  
-from urllib.parse import urlparse
-
-from django.urls import resolve, reverse
 
 
 def get_title(url):  
@@ -72,17 +69,3 @@ def update_session(session, key, value:dict):
     # 注意一定要设置modified为True
     session.modified = True
     
-
-# not used
-def get_prev_url(request):
-    '''
-    获得当前请求页面的之前的页面，若之前的页面不存在或就是当前页面，则返回默认页面
-    '''
-    previous = request.headers.get("Referer")
-    if previous is None:
-        previous = reverse("site_nav:default") 
-    else:
-        previous = urlparse(previous)[2]
-        previous = reverse("site_nav:default") if previous == request.path_info else previous
-    return previous
-

@@ -4,58 +4,8 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 
 from .utils import utils
-
-# IS_SITE_NAV_DEBUG = True
-IS_SITE_NAV_DEBUG = False
-ADMIN_ID = [1]
-
-
-class User(models.Model):
-    '''
-    用户表
-    '''
-
-    id = models.BigAutoField(verbose_name="用户ID", primary_key=True)
-    name = models.CharField(verbose_name="用户名", max_length=64)
-
-    class Meta:
-        verbose_name = "用户"
-        verbose_name_plural = "用户"
-
-    # 重定义print内容
-    def __str__(self):
-        return self.name
-
-    # 重定义内置方法，用于灵活地得到url，有利于html模板
-    def get_absolute_url(self):
-        # 反向解析url
-        return reverse("User_detail", kwargs={"pk": self.pk})
-
-    @staticmethod
-    def field_names():
-        '''
-        此表中可以展现给用户的字段。也影响着表单。
-        '''
-        return ["id", "name"]
-
-    @classmethod
-    def fields(cls):
-        '''
-        返回字典，以字段名称为key，以模型字段对象为value
-
-        用途与`fields2dict`有本质区别。`fields`是类方法，且返回的字典value仍是`django.db.models.Field`的子类，可以访问`verbose_name`等有用的选项。
-        而`field2dict`返回的字典value是字段的值。
-        '''
-        return {value.name: value for value in cls._meta.get_fields() if value.name in cls.field_names()}
-
-    def _fields2dict(self):
-        return {"id": self.id, "name": self.name}
-
-    def fields2dict(self):
-        '''
-        将`fiels_to_use()`返回的字段作为字典的key，并将字段的值作为字典的value
-        '''
-        return {key: value for key, value in self._fields2dict().items() if key in self.field_names()}
+# used in the foreign key of the 2 models
+from .config import User
 
 
 class SiteCategory(models.Model):

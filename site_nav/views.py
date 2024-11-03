@@ -8,8 +8,9 @@ from django import forms
 from django.urls import reverse, resolve
 from django.template.response import TemplateResponse
 
-from .models import User, SiteCategory, SiteNav, IS_SITE_NAV_DEBUG, ADMIN_ID
+from .models import SiteCategory, SiteNav
 from .utils import utils
+from .config import UserAPI, IS_SITE_NAV_DEBUG, ADMIN_ID
 
 
 def add_classes(form, fields: list | str = "__all__", classes_to_add: str | dict = {"input_class": "form-control", "select_class": "form-select"}) -> None:
@@ -176,12 +177,6 @@ class BootStrapForm(forms.Form):
             self, "__all__", classes_to_add)
 
 
-class UserForm(BootStrapModelForm):
-    class Meta:
-        model = User
-        fields = ["name"]
-
-
 class SiteCategoryOriginForm(BootStrapModelForm):
     server_side_fields = ["name"]
 
@@ -336,40 +331,6 @@ def SiteNavForm(user_id, constraints=dict(), *args, **kwargs):
     return SiteNavOriginForm(user_id, constraints, *args, **kwargs) if user_id not in ADMIN_ID else SiteNavAdminForm(*args, **kwargs)
 
 
-class LoginForm(BootStrapForm):
-    name = forms.CharField(
-        label="用户名", widget=forms.TextInput(), max_length=64)
-
-
-def login(request):
-    if request.method == "GET":
-        form = LoginForm()
-        return TemplateResponse(request, "login.html", {"form": form})
-
-    elif request.method == "POST":
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            obj = User.objects.filter(**form.cleaned_data).first()
-            if obj is not None:
-                # 模拟登录成功
-                # 添加session数据
-                # user: 用户相关信息
-                #     id: 用户id
-                #     name: 用户名
-                request.session["user"] = {"id": obj.id, "name": obj.name}
-                return redirect(request.session["info"]["last_url"])
-            else:
-                form.add_error(None, "登录失败")
-                return TemplateResponse(request, "login.html", {"form": form})
-        else:
-            return TemplateResponse(request, "login.html", {"form": form, "was_validated": "was-validated"})
-
-
-def logout(request):
-    request.session.flush()
-    return redirect(reverse("site_nav:login"))
-
-
 def site_nav(request):
     if request.method == "GET":
         # 获取当前用户id，id为ADMIN_ID[0]表示默认用户，显示未登录可以显示的信息
@@ -377,8 +338,7 @@ def site_nav(request):
 
         id_filter.append(ADMIN_ID[0])
 
-        user = request.session.get("user", dict())
-        user_id = user.get("id")
+        user_id = UserAPI(request).id
         if user_id is not None:
             id_filter.append(user_id)
 
@@ -402,13 +362,13 @@ def site_nav_add(request):
     op_title = "新增网站"
 
     if request.method == "GET":
-        form = SiteNavForm(user_id=request.session["user"]["id"])
+        form = SiteNavForm(user_id=UserAPI(request).id)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         form = SiteNavForm(
-            user_id=request.session["user"]["id"], data=request.POST)
+            user_id=UserAPI(request).id, data=request.POST)
 
         if form.is_valid():
             form.save()
@@ -424,14 +384,14 @@ def site_nav_edit(request, id):
     obj = SiteNav.objects.filter(id=id).first()
 
     if request.method == "GET":
-        form = SiteNavForm(user_id=request.session["user"]["id"], instance=obj)
+        form = SiteNavForm(user_id=UserAPI(request).id, instance=obj)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         # 与add区别是：`instance`
         form = SiteNavForm(
-            user_id=request.session["user"]["id"], data=request.POST, instance=obj)
+            user_id=UserAPI(request).id, data=request.POST, instance=obj)
 
         if form.is_valid():
             form.save()
@@ -458,13 +418,13 @@ def site_categ_add(request):
     op_title = "新增分类"
 
     if request.method == "GET":
-        form = SiteCategoryForm(user_id=request.session["user"]["id"])
+        form = SiteCategoryForm(user_id=UserAPI(request).id)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         form = SiteCategoryForm(
-            user_id=request.session["user"]["id"], data=request.POST)
+            user_id=UserAPI(request).id, data=request.POST)
 
         if form.is_valid():
             form.save()
@@ -481,14 +441,14 @@ def site_categ_edit(request, id):
 
     if request.method == "GET":
         form = SiteCategoryForm(
-            user_id=request.session["user"]["id"], instance=obj)
+            user_id=UserAPI(request).id, instance=obj)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         # 与add区别是：`instance`
         form = SiteCategoryForm(
-            user_id=request.session["user"]["id"], data=request.POST, instance=obj)
+            user_id=UserAPI(request).id, data=request.POST, instance=obj)
 
         if form.is_valid():
             form.save()
@@ -506,7 +466,3 @@ def site_categ_delete(request, id):
     if obj is not None:
         obj.delete()
     return redirect(request.session["info"]["last_url"])
-
-
-def backup_site_nav(request):
-    return TemplateResponse(request, "backup_site_categ.html")

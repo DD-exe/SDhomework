@@ -1,9 +1,10 @@
 from django.shortcuts import redirect, HttpResponse
 from django.urls import reverse, resolve
 
-from ..models import User, SiteCategory, SiteNav, ADMIN_ID, IS_SITE_NAV_DEBUG
+from ..models import SiteCategory, SiteNav
 from .. import views
 from ..utils import utils
+from ..config import UserAPI, ADMIN_ID, IS_SITE_NAV_DEBUG
 
 # 在“root.html”中的参数，在中间件的`process_template_response`中赋值
 
@@ -20,6 +21,7 @@ class InfoMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
+        # TODO: 整合的时候要改
         if resolve(request.path_info).func.__name__ in dir(views):
             # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
             if IS_SITE_NAV_DEBUG:
@@ -53,6 +55,8 @@ class InfoMiddleware:
 
     def process_template_response(self, request, response):
         '''
+        添加渲染参数：last_url, display
+
         中间件的hook函数，django自动调用，无需显式地调用
 
         对于视图函数返回的`TemplateResponse`添加部分登录相关的渲染参数，用来区分未登录和已登录的html界面，从而减少html模板和视图函数的编写
@@ -63,7 +67,7 @@ class InfoMiddleware:
         if IS_SITE_NAV_DEBUG:
             print("6: ", request.session.get("info"))
         if response.context_data is None:
-            response.context_data = {"last_url": request.session["info"]["last_url"], "display": request.session["config"]["display"]}
+            response.context_data = {"last_url": request.session["info"]["last_url"], "config_display": request.session["config"]["display"]}
         else:
             response.context_data.setdefault("last_url", request.session["info"]["last_url"]) 
             display = request.session["config"]["display"] 
@@ -87,23 +91,24 @@ class LoginMiddleware:
     此外，对于视图函数返回的`TemplateResponse`添加部分登录相关的渲染参数，用来区分未登录和已登录的html界面，从而减少html模板和视图函数的编写
     '''
 
-    # 未登录可访问的地址
-    except_paths = [reverse("site_nav:login"), reverse("site_nav:default"),
-                    reverse("site_nav:logout")]
-
     def __init__(self, get_response):
         self.loggedin = False
-        self.user = dict()
         self.get_response = get_response
+
+        print(UserAPI.login_url_name())
+        print(UserAPI.logout_url_name())
+        # 未登录可访问的地址
+        self.except_paths = [reverse(UserAPI.login_url_name()), reverse("site_nav:default"),
+                        reverse(UserAPI.logout_url_name())]
 
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         # 用于判断用户是否登录，若为None，则未登录
-        self.user = request.session.get("user", {})
-        self.loggedin = True if self.user != {} else False
+        self.user = UserAPI(request)
+        self.loggedin = self.user.is_authenticated
         if not self.loggedin and request.path_info not in self.except_paths:
-            return redirect(reverse("site_nav:login"))
+            return redirect(reverse(UserAPI.login_url_name()))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -115,6 +120,8 @@ class LoginMiddleware:
 
     def process_template_response(self, request, response):
         '''
+        添加渲染参数：loggedin, user, ADMIN_ID
+
         中间件的hook函数，django自动调用，无需显式地调用
 
         对于视图函数返回的`TemplateResponse`添加部分登录相关的渲染参数，用来区分未登录和已登录的html界面，从而减少html模板和视图函数的编写
@@ -187,12 +194,7 @@ class UserMiddleware:
             # 不是访问敏感路径
             return
 
-        user = request.session.get("user", dict())
-        user_id = user.get("id")
-        if user_id is None:
-            # 未登录
-            return redirect(reverse("site_nav:login"))
-
+        user_id = UserAPI(request).id 
         if user_id in ADMIN_ID:
             # 管理员可随意修改
             return
