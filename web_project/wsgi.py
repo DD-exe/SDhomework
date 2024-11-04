@@ -1,5 +1,5 @@
 """
-WSGI config for ForumBackend project.
+WSGI config for web_project project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
