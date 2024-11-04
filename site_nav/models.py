@@ -5,7 +5,13 @@ from django.core.exceptions import ValidationError
 
 from .utils import utils
 # used in the foreign key of the 2 models
-from .config import User
+from .config import User as ConfigUser
+
+
+# proxy model: used to solve problem `'site_nav.SiteCategory.user' refers to field 'id' which is not local to model 'site_nav.User'`
+class User(ConfigUser):
+    class Meta:
+        proxy = True
 
 
 class SiteCategory(models.Model):

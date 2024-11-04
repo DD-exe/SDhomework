@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse, resolve
 
 from ..models import SiteCategory, SiteNav

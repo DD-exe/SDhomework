@@ -1,5 +1,3 @@
-from urllib.parse import urlparse
-
 from django.forms.utils import ErrorList
 from django.shortcuts import redirect, HttpResponse
 from django import forms
