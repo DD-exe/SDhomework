@@ -34,9 +34,9 @@
                 <th style="width: 10%;">标&nbsp;题</th>
                 <th style="width: 10%;">主&nbsp;题</th>
                 <th style="width: 35%;">内&nbsp;容</th>
-                <th style="width: 15%;">发帖与更新</th>
+                <th style="width: 16%;">发帖与更新</th>
                 <th style="width: 10%;">用&nbsp;户</th>
-                <th style="width: 10%;">操作</th>
+                <th style="width: 15%;">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -60,16 +60,10 @@
                             {% csrf_token %}
                             <button type="submit" class="btn btn-outline-danger btn-sm">删除</button>
                         </form>
-                        {% if request.user.is_authenticated %}
-                            <form action="{% url 'collect_post' post.id %}" method="POST" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-success btn-sm">收藏</button>
-                            </form>
-                            <form action="{% url 'remove_collect' post.id %}" method="POST" style="display:inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-secondary btn-sm">取消收藏</button>
-                            </form>
-                        {% endif %}
+                        <form action="{% url 'collect_post' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success btn-sm">收藏</button>
+                        </form>
                     </td>
                 </tr>
             {% empty %}
