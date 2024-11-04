@@ -1,0 +1,70 @@
+<!-- templates/post_detail.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div>
+<ul>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">  <!-- 设置列宽 -->
+                <div class="p-5 my-5 border">
+                    <li>
+                        <h2 class="text-center mb-3"><code class="fw-bold">{{ post.title }}</code></h2>
+                    </li>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> &ensp;主&ensp;&ensp;题&ensp; </span>
+                        <input readonly class="form-control text-center" value="{{ post.subject }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> &ensp;内&ensp;&ensp;容&ensp; </span>
+                        <textarea readonly class="form-control text-center" style="height: 38px;">{{ post.content }}</textarea>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> &ensp;用&ensp;&ensp;户&ensp; </span>
+                        <input readonly class="form-control text-center" value="{{ post.user.username }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> 发帖时间 </span>
+                        <input readonly class="form-control text-center" value="{{ post.created_at }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> 最后更新 </span>
+                        <input readonly class="form-control text-center" value="{{ post.updated_at }}">
+                    </div>
+                    <div style="text-align:center;">
+                        <form action="{% url 'edit_post' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-warning btn-lg">编辑</button>
+                        </form>
+                        <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-lg">删除</button>
+                        </form>
+                        <form action="{% if is_collected %}{% url 'remove_collect' post.id %}{% else %}{% url 'collect_post' post.id %}{% endif %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            {% if is_collected %}
+                                <button type="submit" class="btn btn-outline-secondary btn-lg">取消收藏</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-outline-success btn-lg">收藏</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ul>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-footer bg-light">
+            <h1 class="text-center"><code>THAT'S THE END</code></h1>
+        </div>
+    </div>
+
+<script>
+    function confirmDelete() {
+        return confirm("确认删除这个帖子吗？");
+    }
+</script>
+{% endblock %}

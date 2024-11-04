@@ -1,0 +1,90 @@
+{% extends 'root.html' %}
+
+{% block content %}
+  <div class="container mt-3">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">{{ name }}表</h2>
+      </div>
+      <div class="card-body">
+        <!-- 反向解析url, 但不显示 -->
+        {% if name == '网站' %}
+          {% url 'site_nav:site-add' as add_url %}
+        {% elif name == '分类' %}
+          {% url 'site_nav:categ-add' as add_url %}
+        {% endif %}
+        <button type="button" class="btn btn-success" onclick="window.location.href='{{ add_url }}';">新增{{ name }}</button>
+      </div>
+      <div class="card-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <!-- 双重循环保证表格head和body列顺序相同 -->
+              {% for field_name in query.first.fields2dict.keys %}
+                {% for field in query.first.fields.values %}
+                  {% if field.name == field_name %}
+                    <th scope="col">{{ field.verbose_name }}</th>
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+
+              <th scope="col">操作</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for obj in query %}
+              <tr>
+                {% for field_name, field_value in obj.fields2dict.items %}
+                  {% if field_name == 'id' %}
+                    <th scope="row">{{ field_value }}</th>
+                  {% else %}
+                    <td>{{ field_value }}</td>
+                  {% endif %}
+                {% endfor %}
+
+                <td>
+                  <div class="d-inline-flex gap-1">
+                    {% if name == '网站' %}
+                      {% url 'site_nav:site-edit' id=obj.id as edit_url %}
+                      {% url 'site_nav:site-delete' id=obj.id as delete_url %}
+                    {% elif name == '分类' %}
+                      {% url 'site_nav:categ-edit' id=obj.id as edit_url %}
+                      {% url 'site_nav:categ-delete' id=obj.id as delete_url %}
+                    {% endif %}
+                    <button type="button" class="btn btn-primary" onclick="window.location.href='{{ edit_url }}';">编辑</button>
+                    <!-- 注意id之间的对应关系，且id必须unique -->
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete{{ obj.id }}UrlModal">删除</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="delete{{ obj.id }}UrlModal" tabindex="-1" aria-labelledby="delete{{ obj.id }}UrlModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="delete{{ obj.id }}UrlModalLabel">确认删除</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>确认删除{{ name }}“{{ obj }}”吗？</p>
+                            {% if name == '网站' %}
+                              <p>
+                                URL为： <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ obj.url }}" target="_blank">{{ obj.url }}</a>
+                              </p>
+                            {% endif %}
+                          </div>
+                          <div class="modal-footer d-flex justify-content-between">
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="window.location.href='{{ delete_url }}';">删除</button>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

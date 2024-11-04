@@ -1,0 +1,45 @@
+<!-- register.html -->
+
+{%  load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="icon" href="{% static 'images/Spider-Man.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}"/>
+</head>
+<body>
+    <div class="box">
+        <h2>注册</h2>
+        <form method="post" >
+            {%  csrf_token %}
+        <div class="input-box" style="margin-bottom: 7px" title="asdffgf">
+            <div title="sdf" ><label>用户名</label></div>
+            <div class="tip">sdfdfgfd</div>
+            <input type="text" placeholder="请输入用户名" name="username"/>
+            <label style="color: red">{{ msg2 }}</label>
+        </div>
+        <div class="input-box">
+            <label>密码</label>
+            <input type="password" placeholder="请设置密码" name="password"/>
+        </div>
+        <div class="input-box">
+            <label>确认密码</label>
+            <input type="password" placeholder="请再次输入您设置的密码" name="password2"/>
+            <label style="color: red">{{ msg1 }}</label>
+        </div>
+        <!-- 密保问题 -->
+        <!-- 可否使用手机号或邮箱进行验证 -->
+        <div class="btn-box">
+            <div style="margin-top: 10px;">
+                <button type="submit" style="width: 250px;">注册</button>
+            </div>
+        </div>
+        </form>
+        <div class="btn-box">
+            <div><button onclick="window.location.href = '/login/'" style="width: 250px;margin-bottom: 20px">使用已有账号登录</button></div>
+        </div>
+    </div>
+</body>
+</html>

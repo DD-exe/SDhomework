@@ -1,0 +1,15 @@
+asgiref==3.8.1
+beautifulsoup4==4.12.3
+certifi==2024.8.30
+charset-normalizer==3.4.0
+Django==5.1.2
+idna==3.10
+mysqlclient==2.2.4
+requests==2.32.3
+soupsieve==2.6
+sqlparse==0.5.1
+tzdata==2024.2
+urllib3==2.2.3
+typing_extensions==4.12.2
+cryptography==43.0.3
+pycryptodome==3.21.0

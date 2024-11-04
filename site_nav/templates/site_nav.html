@@ -1,0 +1,302 @@
+{% extends 'root.html' %}
+
+{% load static %}
+
+{% block style %}
+  <link rel="stylesheet" href="{% static 'css/tooltip.css' %}" />
+{% endblock %}
+
+{% block content %}
+  <main class="d-flex flex-nowrap mt-1">
+    {% comment 'Sidebar' %}
+    {% endcomment %}
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary mh-100">
+      <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-decoration-none link-body-emphasis"><span class="fs-4 fw-bold">网站分类</span></a>
+      <hr />
+      <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item site-categ mb-4" id="siteCategAll">
+          <h5 class="fw-bold"><a href="#" class="nav-link active">所有分类</a></h5>
+        </li>
+        {% for obj in site_categ_query %}
+          <li class="nav-item">
+            <wow-tooltip class="wowtooltip w-100" aria-describedby="tooltipSiteCateg{{ obj.id }}">
+              <div class="tooltip__label site-categ user-id-{{ obj.user_id }}" id="siteCateg_{{ obj.id }}" aria-describedby="tooltipContentSiteCateg{{ obj.id }}" data-tooltip-placeholder>
+                <h5><a href="#" class="nav-link link-body-emphasis" onmouseover="this.style.cursor='pointer'">{{ obj.name }}</a></h5>
+              </div>
+              <div class="tooltip-dropdown" id="tooltipSiteCateg{{ obj.id }}" data-tooltip-dropdown>
+                <div role="tooltip" class="tooltip-dropdown__content">
+                  <div class="row">
+                    <div class="col-8 text-bg-dark">
+                      <h5>{{ obj.name }}</h5>
+                      <p class="">描述：{{ obj.description }}</p>
+                      <p class="">
+                        <small class="">排序权重：{{ obj.weight }}</small>
+                      </p>
+                      <p class="">
+                        <small class="">用户：{{ obj.user }}</small>
+                      </p>
+                    </div>
+                    <div class="col-4">
+                      <div class="d-grid gap-2">
+                        {% url 'site_nav:categ-edit' id=obj.id as edit_categ_url %}
+                        {% url 'site_nav:categ-delete' id=obj.id as delete_categ_url %}
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='{{ edit_categ_url }}';">编辑</button>
+                        <!-- 注意id之间的对应关系，且id必须unique -->
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteCateg{{ obj.id }}UrlModal">删除</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </wow-tooltip>
+          </li>
+
+          <!-- Modal: 千万不要放在wow-tooltip内部，否则因为没有触发wow-tooltip的hover事件，导致modal不显示 -->
+          <div class="modal fade" id="deleteCateg{{ obj.id }}UrlModal" tabindex="-1" aria-labelledby="deleteCateg{{ obj.id }}UrlModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="deleteCateg{{ obj.id }}UrlModalLabel">确认删除</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>确认删除分类“{{ obj }}”吗？</p>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="window.location.href='{{ delete_categ_url }}';">删除</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <li class="nav-item">
+          <h5><a href="{% url 'site_nav:categ-add' %}" class="nav-link">新增分类</a></h5>
+        </li>
+      </ul>
+    </div>
+    {% comment 'main body' %}
+    {% endcomment %}
+    <div class="container">
+      <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6">
+        {% for index, obj in site_nav_query %}
+          <div class="p-2 site-nav user-id-{{ obj.user_id }} in-site-categ-{{ obj.category_id }}">
+            <wow-tooltip class="wowtooltip w-100 h-100" aria-describedby="tooltipSiteNav{{ obj.id }}">
+              <div class="tooltip__label" aria-describedby="tooltipContentSiteNav{{ obj.id }}" data-tooltip-placeholder>
+                <button type="button" class="btn btn-outline-primary w-100 p-0 overflow-hidden text-dark" style="height: 60px;" onclick="window.open('{{ obj.url }}', '_blank')">
+                  <div class="row g-0">
+                    <div class="col-3 p-0 d-flex text-bg-light" style="height: 60px;">
+                      <img class="m-1 img-fluid rounded-start" src="{{ obj.url }}" alt="图片" loading="lazy" />
+                    </div>
+                    <div class="col-9 p-0 align-content-center">
+                      <div class="d-flex">
+                        <h5 class="ms-3 me-3 mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">{{ obj.name }}</h5>
+                      </div>
+                    </div>
+                  </div>
+                </button>
+              </div>
+              <div class="tooltip-dropdown" id="tooltipSiteNav{{ obj.id }}" data-tooltip-dropdown>
+                <div role="tooltip" class="tooltip-dropdown__content">
+                  <div class="row">
+                    <div class="col-8 text-bg-dark">
+                      <div class="">
+                        <h5 class="">{{ obj.name }}</h5>
+                        <p class="">分类：{{ obj.category }}</p>
+                        <p class="" style="word-break: break-all;">URL：{{ obj.url }}</p>
+                        <p class="" style="word-break: break-all;">
+                          <small>备用URL：{{ obj.backup_url }}</small>
+                        </p>
+                        <p class="">描述：{{ obj.description }}</p>
+                        <p class="">
+                          <small class="">排序权重：{{ obj.weight }}</small>
+                        </p>
+                        <p class="">
+                          <small class="">用户：{{ obj.user }}</small>
+                        </p>
+                      </div>
+                    </div>
+                    <div class="col-4">
+                      <div class="">
+                        <div class="d-grid gap-2">
+                          {% url 'site_nav:site-edit' id=obj.id as edit_nav_url %}
+                          {% url 'site_nav:site-delete' id=obj.id as delete_nav_url %}
+                          <button type="button" class="btn btn-primary" onclick="window.location.href='{{ edit_nav_url }}';">编辑</button>
+                          <!-- 注意id之间的对应关系，且id必须unique -->
+                          <!-- Button trigger modal -->
+                          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteNav{{ obj.id }}UrlModal">删除</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </wow-tooltip>
+          </div>
+
+          <!-- modal -->
+          <div class="modal fade" id="deleteNav{{ obj.id }}UrlModal" tabindex="-1" aria-labelledby="deleteNav{{ obj.id }}UrlModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="deleteNav{{ obj.id }}UrlModalLabel">确认删除</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>确认删除网站“{{ obj }}”吗？</p>
+                  <p>
+                    URL为： <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ obj.url }}" target="_blank">{{ obj.url }}</a>
+                  </p>
+                </div>
+                <div class="modal-footer d-flex justify-content-between">
+                  <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="window.location.href='{{ delete_nav_url }}';">删除</button>
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">取消</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+        <div class="p-2" style="margin-top: 2px;">
+          <button type="button" class="btn btn-outline-primary w-100 p-0 overflow-hidden" style="height: 60px;" onclick="window.location.href='{% url 'site_nav:site-add' %}'">
+            <div class="row">
+              <div class="col-3 p-0">
+                <div class="ms-2 border-end border-primary" style="height: 60px;"></div>
+              </div>
+              <div class="col-9 p-0 align-content-center">
+                <div class="d-flex">
+                  <h5 class="ms-3 me-3 mb-0" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">新增网站</h5>
+                </div>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% comment 'config' %}
+    {% endcomment %}
+    <div class="position-fixed bottom-0 end-0 mb-3 me-3">
+      <div class="collapse my-1" id="collapseConfig">
+        <form method="post" novalidate>
+          {% csrf_token %}
+          <div class="btn-group" style="" role="group" aria-label="Radio toggle button group of display">
+            <input type="radio" class="btn-check" name="config_display" id="config_alldisplay" value="all_display" autocomplete="on" {{ config_display.0|yesno:'checked,' }} />
+            <label class="btn btn-outline-primary" for="config_alldisplay">展示所有内容</label>
+
+            <input type="radio" class="btn-check" name="config_display" id="config_defaultdisplay" value="default_display" autocomplete="on" {{ config_display.1|yesno:'checked,' }} />
+            <label class="btn btn-outline-primary" for="config_defaultdisplay">仅展示默认内容</label>
+
+            <input type="radio" class="btn-check" name="config_display" id="config_userdisplay" value="user_display" autocomplete="on" {{ config_display.2|yesno:'checked,' }} />
+            <label class="btn btn-outline-primary" for="config_userdisplay">仅展示自定义内容</label>
+          </div>
+        </form>
+      </div>
+      <div class="d-flex justify-content-end">
+        <button class="btn btn-outline-primary py-2 align-items-center" type="button" aria-expanded="false" data-bs-toggle="collapse" data-bs-target="#collapseConfig" aria-label="Toggle display"><span>选项</span></button>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block script %}
+  <script>
+    $(document).ready(function () {
+      // 禁用“确认重新提交表单”
+      window.history.replaceState(null, null, window.location.href)
+    
+      function config_display(button_id) {
+        if (button_id === 'config_alldisplay') {
+          {% for id in user.default_user_ids %}
+            $('.user-id-{{ id }}').removeClass('user-id-hide')
+          {% endfor %}
+          $('.user-id-{{ user.id }}').removeClass('user-id-hide')
+        } else if (button_id === 'config_defaultdisplay') {
+          {% for id in user.default_user_ids %}
+            $('.user-id-{{ id }}').removeClass('user-id-hide')
+          {% endfor %}
+          $('.user-id-{{ user.id }}').addClass('user-id-hide')
+        } else if (button_id === 'config_userdisplay') {
+          {% for id in user.default_user_ids %}
+            $('.user-id-{{ id }}').addClass('user-id-hide')
+          {% endfor %}
+          $('.user-id-{{ user.id }}').removeClass('user-id-hide')
+        }
+    
+        $('.user-id-hide,.in-site-categ-hide').hide(200)
+        $('.site-categ:not(.user-id-hide,.in-site-categ-hide),.site-nav:not(.user-id-hide,.in-site-categ-hide)').show(200)
+      }
+    
+      // 用户自定义内容和默认内容显示选项
+      $(':radio[name="config_display"]').click(function () {
+        config_display(this.id)
+      })
+      window.onload = function () {
+        config_display(window.document.getElementById('collapseConfig').querySelector('[checked]').id)
+      }
+    
+      // 切换分类
+      $('.site-categ').click(function () {
+        // 清除其他active
+        $('.site-categ .active').addClass('link-body-emphasis').removeClass('active')
+        // active此条目
+        $(this).find('.link-body-emphasis:first').removeClass('link-body-emphasis').addClass('active')
+        $('.site-categ:not(this)')
+        if (this.id === 'siteCategAll' || this.id === 'siteCategMain') {
+          $('.site-nav').removeClass('in-site-categ-hide')
+        } else {
+          site_categ_id = this.id.split('_').pop()
+          $('.in-site-categ-'.concat(site_categ_id)).removeClass('in-site-categ-hide')
+          $('.site-nav:not(.in-site-categ-'.concat(site_categ_id, ')')).addClass('in-site-categ-hide')
+        }
+    
+        $('.user-id-hide,.in-site-categ-hide').hide(200)
+        $('.site-nav:not(.user-id-hide,.in-site-categ-hide)').show(200)
+      })
+    
+      $('#collapseConfig').click(function () {
+        // 自动收起“选项”
+        $(this).removeClass('show')
+        $('[data-bs-target="#collapseConfig"]').addClass('collapsed')
+    
+        // 不刷新页面提交表单config
+        let xhr = new XMLHttpRequest()
+        xhr.open('POST', '{% url "site_nav:default" %}')
+        const configFormData = new FormData(this.getElementsByTagName('form')['0'])
+        xhr.send(configFormData)
+    
+        // 只是方便控制台检查是否提交成功
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+              console.log('Form submitted successfully')
+            } else {
+              console.log('Error submitting form')
+            }
+          }
+        }
+      })
+    })
+    
+    // 设置hover button时字体颜色
+    $('.site-nav button').mouseenter(function () {
+      $(this).find('h5:first').addClass('text-bg-primary')
+    })
+    $('.site-nav button').mouseleave(function () {
+      $(this).find('h5:first').removeClass('text-bg-primary')
+    })
+    
+    function getFavicon(url) {
+      let a = document.createElement('a')
+      a.href = url
+      return `${a.protocol}//${a.hostname}/favicon.ico`
+    }
+    
+    // 获取各个网站的favicon图片
+    window.addEventListener('load', function () {
+      window.document.querySelectorAll('.site-nav img').forEach(function (obj) {
+        obj.src = getFavicon(obj.src)
+      })
+    })
+  </script>
+  <script src="{% static 'js/tooltip.js' %}"></script>
+{% endblock %}

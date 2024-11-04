@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>File Encoder</title>
+</head>
+<body>
+<p id="blink">文件加密综合</p>
+<script type="text/javascript">var blink =document.getElementById('blink');setInterval(function () {blink.style.opacity =(blink.style.opacity == 0 ? 1:0);}, 1000);</script>
+<div class="upload-container">
+    <form id="encoder" enctype="multipart/form-data" method="post">
+        <label for="en_mod"><blink>Encoder:</blink></label>
+        <select id="en_mod" name="en_mod">
+            <option value="option2">AES加密</option>
+            <option value="option3">DES加密</option>
+            <!--<option value="option4">RSA加密</option>-->
+        </select><br>
+        {% csrf_token %}
+        <label for="key1">key:</label>
+        <input type="text" id="key1" name="key1" value="{{ request.POST.key1 }}"><br>
+        <input type="file" id="file_en_Upload" name="file" style="display: none;">
+        <button type="button" onclick="document.getElementById('file_en_Upload').click()" class="upload-btn">选择文件</button>
+        <span id="selected_en_File"></span>
+        <button type="submit" class="upload-btn">上传文件</button>
+    </form>
+    <form id="decoder" enctype="multipart/form-data" method="post">
+        <label for="de_mod"><blink>Decoder:</blink></label>
+        <select id="de_mod" name="de_mod">
+            <option value="option2">AES解密</option>
+            <option value="option3">DES解密</option>
+            <!--<option value="option4">RSA解密</option>-->
+        </select><br>
+        {% csrf_token %}
+        <label for="key2">key:</label>
+        <input type="text" id="key2" name="key2" value="{{ request.POST.key2 }}"><br>
+        <input type="file" id="file_de_Upload" name="file" style="display: none;">
+        <button type="button" onclick="document.getElementById('file_de_Upload').click()" class="upload-btn">选择文件</button>
+        <span id="selected_de_File"></span>
+        <button type="submit" class="upload-btn">上传文件</button>
+    </form>
+    <form id="test" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <input type="hidden" id="rsa" name="rsa" value="1">
+    </form>
+    <script>
+    var selectElement = document.getElementById("en_mod");
+    selectElement.addEventListener("change", function() {
+        var selectedOption = selectElement.value;
+        if (selectedOption === "option4") {
+            var button = document.createElement("button");
+            button.innerHTML = "RSA密钥生成";
+            button.id="RSA";
+            var form = document.getElementById("test");
+            form.appendChild(button);
+        } else {
+            var existingButton = document.querySelector("button");
+            if (existingButton) {
+                existingButton.remove();
+            }
+        }
+    });
+    </script>
+    <div id="warning">{{ warning }}</div><br>
+    <div id="prikey">{{ prikey }}</div><br>
+    <div id="pubkey">{{ pubkey }}</div><br>
+</div>
+<script>
+    document.getElementById('file_en_Upload').addEventListener('change', function() {
+        var file = this.files[0];
+        document.getElementById('selected_en_File').innerText = "已选择文件：" + file.name;
+    });
+</script>
+<script>
+    document.getElementById('file_de_Upload').addEventListener('change', function() {
+        var file = this.files[0];
+        document.getElementById('selected_de_File').innerText = "已选择文件：" + file.name;
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+{% extends 'root.html' %}
+
+{% block content %}
+  <div class="container mt-3">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">{{ op_title }}</h2>
+      </div>
+      <div class="card-body">
+        <!-- novalidate 禁用浏览器校验 -->
+        <form method="post" class="row g-3" novalidate>
+          {% csrf_token %}
+          {% for field in form %}
+            {% if field.name in form.server_side_fields %}
+              <div>
+            {% else %}
+              <div class="{{ was_validated }}">
+            {% endif %}
+                <div class="mb-3">
+                  <label class="form-label">{{ field.label }}</label>
+                  {{ field }}
+                  <div id="{{ field.field.widget.attrs.aria_describedby }}" class="invalid-feedback">{{ field.errors.0 }}</div>
+                </div>
+              </div>
+          {% endfor %}
+          <div class="form-text" style="color: red;">{{ form.non_field_errors.0 }}</div>
+          <div class="gap-2 d-flex justify-content-between">
+            <button type="submit" class="btn btn-primary">提交</button>
+            <button type="button" class="btn btn-secondary" onclick="window.location.href='{{ last_url }}';">取消</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
