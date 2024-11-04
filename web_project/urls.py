@@ -25,4 +25,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("file_encoder/", include("file_encoder.urls")),
     path("txtencoder/", include("txtencoder.urls")),
+   path('', include('forum.urls')),
+    path("sitenav/", include("site_nav.urls", namespace="site-nav")),
 ]
