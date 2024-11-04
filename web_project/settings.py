@@ -36,7 +36,7 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
-    "txtencoder.apps.TxtencoderConfig",  # 见鬼的逗号
+    "txtencoder.apps.TxtencoderConfig",  
     "file_encoder.apps.FileEncoderConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-  'rest_framework',
+    'rest_framework',
     'forum',
     'site_nav.apps.SiteNavConfig',
     'UserManage.apps.UserManageConfig',
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-  'site_nav.middleware.auth.InfoMiddleware',
+    'site_nav.middleware.auth.InfoMiddleware',
     'site_nav.middleware.auth.LoginMiddleware',
     'site_nav.middleware.auth.AdminMiddleware',
     'site_nav.middleware.auth.UserMiddleware',
@@ -138,15 +138,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
+# 引用位于 STATIC_ROOT 中的静态文件时要使用的 URL
 STATIC_URL = "static/"
 
+# `python manage.py collectstatic` 将收集静态文件进行部署的目录的绝对路径
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATICFILES_DIRS = [
-     BASE_DIR / "forum/static",
-    ('css', os.path.join(STATIC_ROOT, 'css').replace('\\', '/')),
-    ('js', os.path.join(STATIC_ROOT, 'js').replace('\\', '/')),
-    ('images', os.path.join(STATIC_ROOT, 'images').replace('\\', '/')),
+
+
+# 将查找存储在 STATICFILES_DIRS 配置中的文件（使用 django.contrib.staticfiles.finders.FileSystemFinder）
+# 和每个应用程序的 static 子目录中的文件（使用 django.contrib.staticfiles.finders.AppDirectoriesFinder）。
+# 如果存在多个同名文件，将使用第一个找到的文件。
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 

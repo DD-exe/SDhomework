@@ -17,18 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.static import serve
-import app01.views
 from UserManage import views
 from web_project import settings
 
 urlpatterns = [
-    path("", app01.views.my_login),
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path("admin/", admin.site.urls),
     path("file_encoder/", include("file_encoder.urls")),
     path("txtencoder/", include("txtencoder.urls")),
-   path('', include('forum.urls')),
+    path('', include('forum.urls')),
     path("sitenav/", include("site_nav.urls", namespace="site-nav")),
-    path('admin/', admin.site.urls),
     path('login/',views.my_login),
     path('register/',views.register),
     path('alterpw/',views.alter_pw),
