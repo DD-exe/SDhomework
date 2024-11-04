@@ -1,3 +1,6 @@
+# ignore STATIC_ROOT defined in web_project/settings.py
+/static/
+
 # copied from https://github.com/github/gitignore/blob/main/Python.gitignore 
 
 # Byte-compiled / optimized / DLL files

@@ -21,10 +21,11 @@ import app01.views
 from web_project import settings
 
 urlpatterns = [
+    re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path("", app01.views.my_login),
     path("admin/", admin.site.urls),
     path("file_encoder/", include("file_encoder.urls")),
     path("txtencoder/", include("txtencoder.urls")),
-   path('', include('forum.urls')),
+    path('', include('forum.urls')),
     path("sitenav/", include("site_nav.urls", namespace="site-nav")),
 ]
