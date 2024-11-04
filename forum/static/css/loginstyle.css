@@ -22,13 +22,16 @@ body {
     justify-content: center;
     align-items: center;
     width: 350px;
-    height: 420px;
+    /*height: 420px;*/
+    height: auto;
     border-top: 1px solid rgba(255,255,255,0.5);
     border-left: 1px solid rgba(255,255,255,0.5);
     border-bottom: 1px solid rgba(255,255,255,0.2);
     border-right: 1px solid rgba(255,255,255,0.2);
     backdrop-filter: blur(10px);
     background: rgba(50,50,50,0.2);
+    padding-top:10px;
+    padding-bottom: 10px;
 }
 
 .box > h2 {
@@ -43,6 +46,7 @@ body {
     justify-content: center;
     align-items: start;
     margin-bottom: 10px;
+    position: relative;
 }
 
 .box .input-box > label {
@@ -58,7 +62,7 @@ body {
     text-decoration-line: blink;
 }
 
-.box .input-box > input {
+.box .input-box  input {
     box-sizing: border-box;
     color: rgba(255,255,255,0.9);
     font-size: 15px;
@@ -71,17 +75,23 @@ body {
     outline: none;
     padding: 0 10px;
     letter-spacing: 1px;
+    vertical-align:middle;
 }
-.box .input-box > input::placeholder{
+.box .input-box  input::placeholder{
     font-size: 13px;
     color:darkgrey;
 }
 
-.box .input-box > input:focus {
+.box .input-box  input:focus {
     /*border: 1px solid rgba(255,255,255,0.8);*/
     border: 2px solid dodgerblue;
 }
 
+.box .input-box  img{
+    vertical-align:middle;
+    width: 120px;
+    align-self: end;
+}
 
 .box .btn-box {
     width: 250px;
@@ -131,7 +141,7 @@ body {
 }
 
 .box .btn-box > div > a {
-    font-size: 14px;
+    font-size: 13px;
     text-decoration: none;
     color: rgba(255,255,255,0.9);
     transition: 0.2s;
@@ -142,27 +152,56 @@ body {
 }
 
 .box .btn-box > div > a:hover {
-    color: rgba(255,255,255,1);
+    color: darkgrey;
 }
 
-.box .input-box .wrong{
-    font-size: 14px;
+.wrong{
+    font-size: 13px;
     color:red;
     text-align: start;
     width:250px;
 }
 
-.tip{
+.tips{
+    width: 140px;
     position: absolute;
-    top: -20px;
-    left: 0;
+    left: 260px;
+    top: 7px;
+    border: 1px solid #c2c2c2;
+    background-color: white;
+    padding: 5px;
     font-size: 12px;
-    color: red;
-    visibility: visible;
-    opacity: 0;
-    transition: opacity 0.2s;
+    color:#666;
+    font-weight: normal;
+    display:none;
+}
+.arrow1, .arrow2{
+    position: absolute;
+    left: -13px;
+    top: 25px;
+    border-top: 6px transparent dashed;
+    border-left: 6px transparent dashed;
+    border-bottom: 6px transparent dashed;
+    border-right: 6px solid #c2c2c2;
 }
 
-input:hover+label {
-    color:green;
+.arrow2{
+    left: -12px;/*这里很重要,相当于比原来的三角右移了一个像素*/
+    border-right: 6px white solid;/*用白色的三角覆盖掉灰色的三角*/
+ }
+
+.tips .tip1, .tips .tip2{
+    padding-left:16px;
+}
+
+.tips .point{
+    position: absolute;
+    left: 4px;
+    margin-top: 4px;
+    font-size: 40px;
+    line-height: 12px;
+}
+
+input:focus + .tips{
+    display: block;
 }
