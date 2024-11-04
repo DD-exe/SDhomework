@@ -109,12 +109,10 @@
                         <code>欢迎来到论坛主页,&ensp;{{ request.user.username }}</code>
                     </h1>
                     <div class="text-center">
-                        <form action="{% url 'login' %}">
-                            <button type="submit" class="btn btn-primary btn-lg mt-3" style="width: 200px;">登录其他账号</button>
-                        </form><br/>
-                        <form action="{% url 'register' %}">
-                            <button type="submit" class="btn btn-success btn-lg" style="width: 200px;">注册另一账号</button>
-                        </form>
+                        <a href="{% url 'post_list' %}" class="btn btn-secondary btn-lg mt-3" style="width: 200px;">贴子列表</a>
+                        <br/>
+                        <a href="{% url 'login' %}" class="btn btn-primary mt-3" style="width: 150px;">登录其他账号</a>
+                        <a href="{% url 'register' %}" class="btn btn-success mt-3" style="width: 150px;">注册另一账号</a>
                     </div>
                 </h1>
             {% else %}
