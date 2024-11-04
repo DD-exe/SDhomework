@@ -108,7 +108,7 @@ class LoginMiddleware:
 
     def process_template_response(self, request, response):
         '''
-        添加渲染参数：loggedin, user
+        添加渲染参数：user
 
         中间件的hook函数，django自动调用，无需显式地调用
 

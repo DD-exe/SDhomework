@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'forum',
     'site_nav.apps.SiteNavConfig',
     'UserManage.apps.UserManageConfig',
+    'home',
 ]
 
 MIDDLEWARE = [
@@ -76,7 +77,7 @@ ROOT_URLCONF = "web_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [BASE_DIR / 'UserManage/templates'],
+        'DIRS': [],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [

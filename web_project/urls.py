@@ -23,18 +23,20 @@ from web_project import settings
 urlpatterns = [
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path("admin/", admin.site.urls),
+    path("", include("home.urls")),
     path("file_encoder/", include("file_encoder.urls")),
     path("txtencoder/", include("txtencoder.urls")),
-    path('', include('forum.urls')),
-    path("sitenav/", include("site_nav.urls", namespace="site-nav")),
-    path('login/',views.my_login),
+    path('forum/', include('forum.urls')),
+    path("sitenav/", include("site_nav.urls")),
+    path('login/',views.my_login, name='login'),
     path('register/',views.register),
     path('alterpw/',views.alter_pw),
     path('forgetpw/',views.forget_pw),
     path('resetpw/',views.reset_pw),
     path('image/code/',views.img_code),
     path('active',views.account_activate),
-    path('reset',views.password_reset)
+    path('reset',views.password_reset),
+    path('logout/', views.log_out, name='logout')
 ]
 
 
