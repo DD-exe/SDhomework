@@ -4,7 +4,12 @@ from django.urls import reverse, resolve
 from ..models import SiteCategory, SiteNav
 from .. import views
 from ..utils import utils
-from ..config import UserAPI, IS_SITE_NAV_DEBUG
+from ..config import UserAPI
+
+import file_encoder.views
+import txtencoder.views
+import forum.views
+import app01.views
 
 # 在“root.html”中的参数，在中间件的`process_template_response`中赋值
 
@@ -21,29 +26,19 @@ class InfoMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        # TODO: 整合的时候要改
-        if resolve(request.path_info).func.__name__ in dir(views):
+        views_dir = dir(views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views) + dir(app01.views)
+        if resolve(request.path_info).func.__name__ in views_dir:
             # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
-            if IS_SITE_NAV_DEBUG:
-                print("0: ", request.session.get("info"))
             # 若没有，则创建
             utils.set_default_session(request.session, "info", {"current_url": request.path_info, "last_url": reverse("site_nav:default")})
-            if IS_SITE_NAV_DEBUG:
-                print("1: ", request.session.get("info"))
             # 只有不同才改
             if request.session["info"]["current_url"] != request.path_info:
                 utils.update_session(request.session, "info", {"current_url": request.path_info, "last_url": request.session["info"]["current_url"]})
-            if IS_SITE_NAV_DEBUG:
-                    print("3: ", request.session.get("info"))
         else:
             utils.set_default_session(request.session, "info", {"current_url": reverse("site_nav:default"), "last_url": reverse("site_nav:default")})
         
-        if IS_SITE_NAV_DEBUG:
-            print("4: ", request.session.get("info"))
         # config
         utils.set_default_session(request.session, "config", {"display": "all_display"})
-        if IS_SITE_NAV_DEBUG:
-            print(request.session.get("config"))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -64,8 +59,6 @@ class InfoMiddleware:
         若视图函数返回`HttpResponse`，则此函数不会被调用，因此如果希望此函数被调用，需要修改视图函数返回对象
         '''
         
-        if IS_SITE_NAV_DEBUG:
-            print("6: ", request.session.get("info"))
         if response.context_data is None:
             response.context_data = {"last_url": request.session["info"]["last_url"], "config_display": request.session["config"]["display"]}
         else:
@@ -77,8 +70,6 @@ class InfoMiddleware:
             elif display == "user_display":
                 config_display = [False, False, True]
             response.context_data.setdefault("config_display", config_display) 
-            if IS_SITE_NAV_DEBUG:
-                print(config_display)
         return response
 
 
@@ -91,9 +82,6 @@ class LoginMiddleware:
     此外，对于视图函数返回的`TemplateResponse`添加部分登录相关的渲染参数，用来区分未登录和已登录的html界面，从而减少html模板和视图函数的编写
     '''
     # 登录可访问的地址
-    # 有些url含有参数，无法在此处reverse
-    # loggedin_paths = [reverse("site_nav:site-list"), reverse("site_nav:site-add"), reverse("site_nav:site-edit"), reverse("site_nav:site-delete"),
-    #                   reverse("site_nav:categ-list"), reverse("site_nav:categ-add"), reverse("site_nav:categ-edit"), reverse("site_nav:categ-delete")]
     loggedin_views = [views.site_nav_list, views.site_nav_add, views.site_nav_edit, views.site_nav_delete,
                       views.site_categ_list, views.site_categ_add, views.site_categ_edit, views.site_categ_delete]
 
@@ -105,8 +93,6 @@ class LoginMiddleware:
         # the view (and later middleware) are called.
         # 用于判断用户是否登录，若为None，则未登录
         self.user = UserAPI(request)
-        # if not self.user.is_authenticated and request.path_info not in self.loggedin_paths:
-        #     return redirect(reverse(UserAPI.login_url_name()))
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`

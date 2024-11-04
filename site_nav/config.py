@@ -2,7 +2,7 @@
 IS_SITE_NAV_DEBUG = False
 # Do NOT use this in any other source files!!!
 # True: test this app purely alone; False: integrate with the "user" app
-IS_SITE_NAV_TEST = True
+IS_SITE_NAV_TEST = False
 
 # define `User` for models.py and define `UserAPI`
 if IS_SITE_NAV_TEST:
@@ -40,4 +40,5 @@ else:
         @staticmethod
         def default_user_ids():
             # TODO: 找到默认用户的实现方式
-            return [1]
+            # return [1]
+            return [obj.id for obj in User.objects.filter(is_staff=True)]
