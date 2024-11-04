@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>String Processing</title>
+</head>
+<body>
+    <p id="blink">字符串加密综合</p>
+    <script type="text/javascript">var blink =document.getElementById('blink');setInterval(function () {blink.style.opacity =(blink.style.opacity == 0 ? 1:0);}, 1000);</script>
+    <form method="post" id="encoder">
+        <label for="en_mod">Encoder:</label>
+        <select id="en_mod" name="en_mod">
+            <option value="option1">移位加密</option>
+            <option value="option2">AES加密</option>
+            <option value="option3">DES加密</option>
+            <option value="option4">RSA加密</option>
+            <option value="option5">MD5转写</option>
+            <option value="option6">hash转写</option>
+        </select><br>
+        {% csrf_token %}
+        <label for="key1">key:</label>
+        <input type="text" id="key1" name="key1" value="{{ request.POST.key1 }}"><br>
+        <label for="plaintext">text:</label>
+        <input type="text" id="plaintext" name="plaintext" value="{{ request.POST.plaintext }}"><br>
+        <input type="submit" value="加密">
+    </form>
+    <div id="encode">{{ encode }}</div>
+
+
+    <form method="post" id="decoder">
+        <label for="de_mod"><blink>Decoder:</blink></label>
+        <select id="de_mod" name="de_mod">
+            <option value="option1">移位解密</option>
+            <option value="option2">AES解密</option>
+            <option value="option3">DES解密</option>
+            <option value="option4">RSA解密</option>
+        </select><br>
+        {% csrf_token %}
+        <label for="key2">key:</label>
+        <input type="text" id="key2" name="key2" value="{{ request.POST.key2 }}"><br>
+        <label for="ciphertext">text:</label>
+        <input type="text" id="ciphertext" name="ciphertext" value="{{ request.POST.ciphertext }}"><br>
+        <input type="submit" value="解密">
+    </form>
+    <div id="decode">{{ decode }}</div>
+    <form id="test" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <input type="hidden" id="rsa" name="rsa" value="1">
+    </form>
+    <script>
+    var selectElement = document.getElementById("en_mod");
+    selectElement.addEventListener("change", function() {
+        var selectedOption = selectElement.value;
+        if (selectedOption === "option4") {
+            var button = document.createElement("button");
+            button.innerHTML = "RSA密钥生成";
+            button.id="RSA";
+            var textInfo = document.createElement("p");
+            textInfo.innerHTML = "(暂不支持私钥加密公钥解密)";
+            textInfo.style.fontSize = "10px";
+            textInfo.style.color = "blue";
+            var form = document.getElementById("test");
+            form.appendChild(button);
+            form.appendChild(textInfo);
+        } else {
+            var existingButton = document.querySelector("button");
+            if (existingButton) {
+                existingButton.remove();
+            }
+        }
+    });
+    </script>
+    <div id="warning">{{ warning }}</div><br>
+    <div id="prikey">{{ prikey }}</div><br>
+    <div id="pubkey">{{ pubkey }}</div><br>
+</body>
+</html>
