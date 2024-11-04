@@ -1,0 +1,39 @@
+{%  load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>重设密码</title>
+    <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}"/>
+</head>
+<body>
+    <div class="box">
+        <h2>重设密码</h2>
+        <form method="post" novalidate>
+            {%  csrf_token %}
+        <div class="input-box">
+            <label>新密码</label>
+            {{ form.password }}
+            <div  class="tips">
+            <span class="arrow1"></span>
+            <span class="arrow2"></span>
+            <p class="tip1"><span class="point">· </span>密码长度至少8个字符</p>
+            <p class="tip2"><span class="point">· </span>至少包含数字、大小写字母和下划线字符中的两种</p>
+            </div>
+            <span class ="wrong" >{{ form.password.errors.0 }}</span>
+        </div>
+        <div class="input-box" style="margin-top: 20px">
+            <label>确认新密码</label>
+            {{ form.password2 }}
+            <span class ="wrong" >{{ form.password2.errors.0 }}</span>
+        </div>
+        <div class="btn-box">
+            <div style="margin-top: 25px;">
+                <button style="width: 250px;margin-bottom: 20px">确定</button>
+                <!--<button onclick="window.location.href = 'index.html'">返回</button>-->
+            </div>
+        </div>
+        </form>
+    </div>
+</body>
+</html>
