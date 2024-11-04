@@ -138,7 +138,7 @@ def my_login(request):
                     request.session.set_expiry(0)
                 else:
                     request.session.set_expiry(None)
-                return redirect('/admin/')  #这里改成网站的首页
+                return redirect('/forum/home/')  #这里改成网站的首页
             else:
                 form.add_error("imgcode","用户名或密码错误!")
                 return render(request, 'login.html', {'form': form})
