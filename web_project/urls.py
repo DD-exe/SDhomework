@@ -24,8 +24,8 @@ urlpatterns = [
     re_path(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
     path("admin/", admin.site.urls),
     path("file_encoder/", include("file_encoder.urls")),
-    path("txtencoder/", include("txtencoder.urls")),
-    path('', include('forum.urls')),
+    path("txtencoder/", include("txtencoder.urls")),forum/
+    path('forum/', include('forum.urls')),
     path("sitenav/", include("site_nav.urls", namespace="site-nav")),
     path('login/',views.my_login),
     path('register/',views.register),
