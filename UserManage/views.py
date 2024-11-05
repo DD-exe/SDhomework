@@ -514,8 +514,9 @@ def reset_pw(request):
 
 @login_required(login_url='/login/')
 def log_out(request):
+    last_url = request.session["info"]["last_url"]
     logout(request)
-    return redirect('/login/')
+    return redirect(last_url)
 
 def img_code(request):
     img,code_string = check_code()
