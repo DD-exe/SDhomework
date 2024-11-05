@@ -1,10 +1,24 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <!-- good to view on different device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- keywords for search engine -->
+    {% comment %} <meta name="keywords" content="" /> {% endcomment %}
+    {% comment %} <meta name="description" content="" /> {% endcomment %}
+    {% comment %} <meta name="author" content="DengDi" /> {% endcomment %}
     <title>File Encoder</title>
-</head>
+
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" />
+    {% block style %}
+
+    {% endblock %}
+  </head>
 <body>
+{% include "nav.html" %}
 <p id="blink">文件加密综合</p>
 <script type="text/javascript">var blink =document.getElementById('blink');setInterval(function () {blink.style.opacity =(blink.style.opacity == 0 ? 1:0);}, 1000);</script>
 <div class="upload-container">
@@ -76,6 +90,5 @@
         document.getElementById('selected_de_File').innerText = "已选择文件：" + file.name;
     });
 </script>
-
 </body>
 </html>
