@@ -16,26 +16,29 @@ def home(request):
 def post_list(request):
     subjects = Subject.objects.all()  # 获取所有主题
     selected_subject = request.GET.get('subject')  # 从查询参数中获取选中的主题
+    collected_filter = request.GET.get('collected', '')  # 从查询参数中获取选是否收藏帖子
 
     # 根据选中的主题过滤帖子
     if selected_subject:
         posts = Post.objects.filter(subject__name=selected_subject)
     else:
-        posts = Post.objects.all()  # 查询所有帖子
+        posts = Post.objects.all()
 
-    collected_posts = Collect.objects.filter(user=request.user).values_list('post_id',
-                                                                            flat=True) if request.user.is_authenticated else []
-    collected_status = {post.id: post.id in collected_posts for post in posts}
+    if collected_filter == "yes":
+        posts = posts.filter(id__in=Collect.objects.filter(user=request.user).values('post_id'))
+    if collected_filter == "no":
+        posts = Post.objects.all()
 
     paginator = Paginator(posts, 8)  # 每页显示8个帖子
     page_number = request.GET.get('page')  # 获取当前页码
     page_obj = paginator.get_page(page_number)  # 获取对应页面的帖子
 
     return render(request, 'post_list.html', {
+        'posts': posts,
         'page_obj': page_obj,
-        'subjects': subjects,  # 传递主题列表
-        'selected_subject': selected_subject,  # 传递选中的主题
-        'collected_status': collected_status,
+        'subjects': subjects,
+        'selected_subject': selected_subject,
+        'collected_filter': collected_filter,
     })
 
 @login_required
@@ -149,6 +152,11 @@ def remove_collect(request, post_id):
         messages.success(request, '成功移除收藏！')
     return redirect('post_detail', post_id=post_id)
 
+
+def collected_posts(request, post_id):
+    collected_posts = Collect.objects.filter(user=request.user).values_list('post', flat=True)
+    posts = Post.objects.filter(id__in=collected_posts)
+    return render(request, 'collected_posts.html', {'posts'})
 
 
 @login_required
