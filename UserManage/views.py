@@ -102,6 +102,28 @@ class ResetForm(forms.Form):
         widget=forms.PasswordInput(attrs={'placeholder': '请再次输入您设置的密码'})
     )
 
+class EditForm(forms.Form):
+    username = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder':'请输入新的用户名',"class":"form-control"}),
+        validators=[validators.validate_username]
+    )
+    first_name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={ 'placeholder': '请输入新的名字',"class":"form-control"}),
+        validators = [validators.validate_name]
+    )
+    last_name = forms.CharField(
+        max_length=100,
+        required=True,
+        widget=forms.TextInput(attrs={'placeholder': '请输入新的姓氏',"class":"form-control"}),
+        validators = [validators.validate_name]
+    )
+
+
+
 
 def my_login(request):
     # if request.user.is_authenticated:
@@ -524,5 +546,41 @@ def password_reset(request):
     request.session.set_expiry(60*60)
     return redirect('/resetpw/')
 
+@login_required(login_url='/login/')
 def user_page(request):
-    return render(request,"userpage.html")
+    firstname = request.user.first_name
+    lastname = request.user.last_name
+    username = request.user.username
+    email = request.user.email
+    join_time = request.user.date_joined
+    return render(request,"userpage.html",locals())
+
+@login_required(login_url='/login/')
+def user_edit(request):
+    firstname = request.user.first_name
+    lastname = request.user.last_name
+    username = request.user.username
+    email = request.user.email
+    join_time = request.user.date_joined
+    if request.method == 'POST':
+        form = EditForm(data=request.POST)
+        if form.is_valid():
+            if form.cleaned_data['username'] == request.user.username:
+                user = User.objects.get(email=request.user.email)
+                user.first_name = form.cleaned_data['first_name']
+                user.last_name = form.cleaned_data['last_name']
+                user.save()
+                return redirect('/userpage/')
+            elif User.objects.filter(username=form.cleaned_data['username']).exists():
+                form.add_error("username", "用户名已被注册过！")
+                return render(request,"editpage.html",{'form':form,'email':email,'join_time':join_time})
+            else:
+                user = User.objects.get(email = request.user.email)
+                user.username = form.cleaned_data['username']
+                user.first_name = form.cleaned_data['first_name']
+                user.last_name = form.cleaned_data['last_name']
+                user.save()
+                return redirect('/userpage/')
+        else:
+            return render(request,"editpage.html",{'form':form,'email':email,'join_time':join_time})
+    return render(request,"editpage.html",{'form':EditForm(),'firstname':firstname,'lastname':lastname,'username':username,'email':email,'join_time':join_time})

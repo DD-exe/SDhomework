@@ -27,3 +27,8 @@ def validate_password(value):
         raise ValidationError(
             '密码必须包含至少两种字符类型：字母、数字和下划线。'
         )
+
+def validate_name(value):
+    # 正则表达式：只允许字母和中文字符
+    if not re.match(r'^[a-zA-Z\u4e00-\u9fa5]+$', value):
+        raise ValidationError('名字只能包含英文字母和中文字符')
