@@ -1,6 +1,6 @@
 # views.py
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Post,Subject,Collect
+from .models import Post,Subject,Collect,Comment,Reply
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -27,7 +27,7 @@ def post_list(request):
                                                                             flat=True) if request.user.is_authenticated else []
     collected_status = {post.id: post.id in collected_posts for post in posts}
 
-    paginator = Paginator(posts, 5)  # 每页显示5个帖子
+    paginator = Paginator(posts, 8)  # 每页显示8个帖子
     page_number = request.GET.get('page')  # 获取当前页码
     page_obj = paginator.get_page(page_number)  # 获取对应页面的帖子
 
@@ -148,3 +148,83 @@ def remove_collect(request, post_id):
         collect.delete()
         messages.success(request, '成功移除收藏！')
     return redirect('post_detail', post_id=post_id)
+
+
+
+@login_required
+def new_comment(request, post_id):
+    # 获取帖子对象，如果不存在则返回 404 错误
+    post = get_object_or_404(Post, id=post_id)
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        content = request.POST.get('content')
+        print(f"user:,'{username}',content:, '{content}'")
+
+        if content:  # 确保评论内容不为空
+            # 创建并保存新的评论
+            comment = Comment(content=content, user=request.user, post=post)
+            comment.save()
+            messages.success(request, "评论已成功发布。")
+            return redirect('post_detail', post_id=post_id)  # 重定向到帖子列表
+        else:
+            messages.error(request, "请补全评论内容。")
+
+    # 渲染评论表单模板
+    return render(request, 'new_comment.html', {
+        'post': post,
+        'post_id': post_id,
+    })
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    # 检查当前用户是否是评论的作者
+    if comment.user != request.user:
+        messages.error(request, "你没有权限删除这条评论。")
+        return redirect('post_list')
+
+    comment.delete()
+    messages.success(request, "评论已成功删除。")
+    return redirect('post_list')  # 删除后重定向到帖子列表
+
+
+@login_required
+def new_reply(request, post_id, comment_id):
+    # 获取评论对象，如果不存在则返回 404 错误
+    comment = get_object_or_404(Comment, id=comment_id)
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        content = request.POST.get('content')
+        print(f"user:,'{username}',content:, '{content}'")
+
+        if content:  # 确保回复内容不为空
+            # 创建并保存新的回复
+            reply = Reply(content=content, user=request.user, comment=comment)
+            reply.save()
+            messages.success(request, "回复已成功发布。")
+            return redirect('post_detail', post_id=post_id)  # 重定向到帖子列表
+        else:
+            messages.error(request, "请补全回复内容。")
+
+    # 渲染回复表单模板
+    return render(request, 'new_reply.html', {
+        'comment': comment,
+    })
+
+
+@login_required
+def delete_reply(request, post_id, reply_id):
+    reply = get_object_or_404(Reply, id=reply_id)
+
+    # 检查当前用户是否是评论的作者
+    if reply.user != request.user:
+        messages.error(request, "你没有权限删除这条回复。")
+        return redirect('post_detail', post_id=post_id)
+
+    reply.delete()
+    messages.success(request, "回复已成功删除。")
+    return redirect('post_detail', post_id=post_id)  # 删除后重定向到帖子列表
