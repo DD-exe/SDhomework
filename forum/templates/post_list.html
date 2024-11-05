@@ -20,18 +20,17 @@
                             {% endfor %}
                         </select>
                         <button type="submit" class="btn btn-success">搜索</button>
+                        <form method="GET" action="{% url 'post_list' %}" class="mb-4">
+                            <div class="col-md-6">
+                                <div class="btn-group" role="group">
+                                    <button type="submit" name="collected" value="yes" class="btn btn-success {% if collected_filter == 'yes' %}active{% endif %}">
+                                        已收藏
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-        </div>
-    </form>
-
-    <form method="GET" action="{% url 'post_list' %}" class="mb-4">
-        <div class="col-md-6">
-            <div class="btn-group" role="group">
-                <button type="submit" name="collected" value="yes" class="btn btn-success {% if collected_filter == 'yes' %}active{% endif %}">
-                    已收藏
-                </button>
             </div>
         </div>
     </form>
@@ -94,12 +93,12 @@
       <nav aria-label="Page navigation" class="text-center">
           <ul class="pagination justify-content-center">
               <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
-                  <a class="btn btn-outline-primary" href="{% if page_obj.has_previous %}?page=1{% else %}javascript:void(0);{% endif %}" aria-label="First" {% if not page_obj.has_previous %}onclick="return false;"{% endif %}>
+                  <a class="btn btn-outline-primary" href="{% if page_obj.has_previous %}?page=1{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="First" {% if not page_obj.has_previous %}onclick="return false;"{% endif %}>
                       <span aria-hidden="true">{% if not page_obj.has_previous %}已经是第一页{% else %}&laquo; 第一页{% endif %}</span>
                   </a>
               </li>
               <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
-                  <a class="btn btn-outline-info" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% else %}javascript:void(0);{% endif %}" aria-label="Previous" {% if not page_obj.has_previous %}onclick="return false;"{% endif %}>
+                  <a class="btn btn-outline-info" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="Previous" {% if not page_obj.has_previous %}onclick="return false;"{% endif %}>
                       <span aria-hidden="true">上一页</span>
                   </a>
               </li>
@@ -109,12 +108,12 @@
               </li>
 
               <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
-                  <a class="btn btn-outline-info" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% else %}javascript:void(0);{% endif %}" aria-label="Next" {% if not page_obj.has_next %}onclick="return false;"{% endif %}>
+                  <a class="btn btn-outline-info" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="Next" {% if not page_obj.has_next %}onclick="return false;"{% endif %}>
                       <span aria-hidden="true">下一页</span>
                   </a>
               </li>
               <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
-                  <a class="btn btn-outline-primary" href="{% if page_obj.has_next %}?page={{ page_obj.paginator.num_pages }}{% else %}javascript:void(0);{% endif %}" aria-label="Last" {% if not page_obj.has_next %}onclick="return false;"{% endif %}>
+                  <a class="btn btn-outline-primary" href="{% if page_obj.has_next %}?page={{ page_obj.paginator.num_pages }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="Last" {% if not page_obj.has_next %}onclick="return false;"{% endif %}>
                       <span aria-hidden="true">{% if not page_obj.has_next %}已经是最后一页{% else %}最后一页 &raquo;{% endif %}</span>
                   </a>
               </li>
@@ -123,6 +122,8 @@
       <h1 class="text-center"><code>THAT'S THE END</code></h1>
   </div>
 </div>
+
+
 
 <script>
     function confirmDelete(postId) {
