@@ -102,21 +102,6 @@ class ResetForm(forms.Form):
         widget=forms.PasswordInput(attrs={'placeholder': '请再次输入您设置的密码'})
     )
 
-# Create your views here.
-# def my_login(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         print(username, password)
-#         user = authenticate(username=username, password=password)
-#
-#         if user is not None:
-#             login(request, user)
-#             return redirect('/admin/')  #这里改成网站的首页
-#         else:
-#             wrongmsg = "用户名或密码错误!"
-#             return render(request, 'login.html', locals())
-#     return render(request, "login.html",{'form':LoginForm()})
 
 def my_login(request):
     # if request.user.is_authenticated:
@@ -262,21 +247,6 @@ def register(request):
             return render(request, 'register.html', {'form': form})
     return render(request, "register.html",{'form':RegisterForm()})
 
-# def register(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         password2 = request.POST.get('password2')
-#         if username == "":
-#             msg2 = "用户名不能为空！"
-#             return render(request, 'register.html', locals())
-#         elif password != password2:
-#             msg1 = '两次输入的密码不一样！'
-#             return render(request, 'register.html', locals())
-#         cuser = User.objects.create_user(username=username, password=password)
-#         cuser.save()
-#         return redirect('/login/')
-#     return render(request, "register.html")
 
 def forget_pw(request):
     if request.method == 'POST':
@@ -554,3 +524,5 @@ def password_reset(request):
     request.session.set_expiry(60*60)
     return redirect('/resetpw/')
 
+def user_page(request):
+    return render(request,"userpage.html")

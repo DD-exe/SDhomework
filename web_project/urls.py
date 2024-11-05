@@ -36,6 +36,7 @@ urlpatterns = [
     path('active',views.account_activate),
     path('reset',views.password_reset),
     path('logout/', views.log_out, name='logout'),
+    path('userpage/',include("UserManage.urls")),
 ]
 
 
