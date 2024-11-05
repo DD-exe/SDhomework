@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect , HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.template.response import TemplateResponse
+
 from UserManage.utils.imgcode import check_code
 from io import BytesIO
 from django import forms
@@ -127,10 +129,10 @@ def my_login(request):
             real_code = request.session.get('imgcode',"").lower()
             if real_code == "":
                 form.add_error("imgcode", "验证码已过期!")
-                return render(request, 'login.html', {'form': form})
+                return TemplateResponse(request, 'login.html', {'form': form})
             elif real_code != user_code:
                 form.add_error("imgcode", "验证码错误!")
-                return render(request, 'login.html', {'form': form})
+                return TemplateResponse(request, 'login.html', {'form': form})
             user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
             if user is not None:
                 login(request, user)
@@ -138,13 +140,13 @@ def my_login(request):
                     request.session.set_expiry(0)
                 else:
                     request.session.set_expiry(None)
-                return redirect('/forum/home/')  #这里改成网站的首页
+                return redirect(request.session["info"]["last_url"])  #这里重定向到登录前的界面
             else:
                 form.add_error("imgcode","用户名或密码错误!")
-                return render(request, 'login.html', {'form': form})
+                return TemplateResponse(request, 'login.html', {'form': form})
         else:
-            return render(request, 'login.html', {'form': form})
-    return render(request, "login.html", {'form': LoginForm()})
+            return TemplateResponse(request, 'login.html', {'form': form})
+    return TemplateResponse(request, "login.html", {'form': LoginForm()})
 
 
 
@@ -510,6 +512,7 @@ def reset_pw(request):
             return render(request, 'resetpw.html', {'form': form})
     return render(request, "resetpw.html", {'form': ResetForm()})
 
+@login_required(login_url='/login/')
 def log_out(request):
     logout(request)
     return redirect('/login/')

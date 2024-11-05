@@ -1,6 +1,7 @@
 from django.shortcuts import redirect
 from django.urls import reverse, resolve
 
+from UserManage.views import img_code
 from ..models import SiteCategory, SiteNav
 from .. import views
 from ..utils import utils
@@ -39,7 +40,8 @@ class InfoMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        views_dir = dir(views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views) + dir(UserManage.views)
+
+        views_dir = (dir(views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views) )
         if resolve(request.path_info).func.__name__ in views_dir:
             # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
             # 若没有，则创建

@@ -3,16 +3,11 @@
 from django.conf import settings
 from django.conf.urls import include
 from django.urls import path
-from UserManage import views
 from .views import home, post_list, new_post, delete_post, edit_post, post_detail, collect_post, remove_collect, collected_posts, new_comment, delete_comment, new_reply, delete_reply
 
 urlpatterns = [
 
     path('home/', home, name='home'),
-
-    path('login/', views.my_login, name='login'),
-    path('logout/', views.log_out, name='logout'),
-    path('register/', views.register, name='register'),
     path('PostList/', post_list, name='post_list'),
     path('NewPost/', new_post, name='new_post'),
     path('delete/<int:post_id>/', delete_post, name='delete_post'),

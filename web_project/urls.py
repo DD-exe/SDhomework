@@ -27,14 +27,15 @@ urlpatterns = [
     path("txtencoder/", include("txtencoder.urls")),
     path('forum/', include('forum.urls')),
     path("sitenav/", include("site_nav.urls", namespace="site-nav")),
-    path('login/',views.my_login),
-    path('register/',views.register),
+    path('login/',views.my_login,name='login'),
+    path('register/',views.register,name="register"),
     path('alterpw/',views.alter_pw),
     path('forgetpw/',views.forget_pw),
     path('resetpw/',views.reset_pw),
     path('image/code/',views.img_code),
     path('active',views.account_activate),
-    path('reset',views.password_reset)
+    path('reset',views.password_reset),
+    path('logout/', views.log_out, name='logout'),
 ]
 
 
