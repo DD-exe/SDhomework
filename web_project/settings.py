@@ -30,14 +30,11 @@ SECRET_KEY = "django-insecure-50g5np+4r3^wh1#stiw!@+wk5maiot-#&2)*j45_4@cl+3hhf8
 DEBUG = True
 
 
-
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 INSTALLED_APPS = [
-    "txtencoder.apps.TxtencoderConfig",  
-    "file_encoder.apps.FileEncoderConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -45,10 +42,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-    'forum',
-    'site_nav.apps.SiteNavConfig',
+    'home.apps.HomeConfig',
     'UserManage.apps.UserManageConfig',
-    'home',
+    'forum.apps.ForumConfig',
+    'site_nav.apps.SiteNavConfig',
+    "txtencoder.apps.TxtencoderConfig",  
+    "file_encoder.apps.FileEncoderConfig",
 ]
 
 MIDDLEWARE = [
@@ -59,7 +58,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    'middleware.auth.InfoMiddleware',
+    'middleware.session.InfoMiddleware',
     'site_nav.middleware.auth.LoginMiddleware',
     'site_nav.middleware.auth.AdminMiddleware',
     'site_nav.middleware.auth.UserMiddleware',
@@ -77,7 +76,7 @@ ROOT_URLCONF = "web_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -96,22 +95,12 @@ WSGI_APPLICATION = "web_project.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'forum',
-#         'USER': 'root',
-#         'PASSWORD': 'sher',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'user',
-        'USER': 'root',
-        'PASSWORD': '123456789',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
@@ -164,6 +153,7 @@ STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
 ]
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -172,14 +162,17 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # 邮箱配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
 # EMAIL_HOST = 'smtp-mail.outlook.com'  # 例如 smtp.gmail.com
 # EMAIL_HOST = 'smtp.office365.com'
 EMAIL_HOST = 'smtp.163.com'  # 例如 smtp.gmail.com
 EMAIL_PORT = '25'  # 或者你使用的端口号
+
 # EMAIL_HOST_USER = 'is-web@outlook.com'  # 你的邮箱
 EMAIL_HOST_USER = 'nisweb@163.com'
 EMAIL_HOST_PASSWORD = 'LSjb8S4JxkegihC9'  # 你的邮箱密码
 EMAIL_USE_TLS = True  # 使用TLS安全连接
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER  # 默认发件人邮箱
 #   yyqldjgogzlsnsdx NZjMb3BkZUt5jy9y  LSjb8S4JxkegihC9
+
 
