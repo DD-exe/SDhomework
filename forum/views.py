@@ -41,7 +41,7 @@ def post_list(request):
         'collected_filter': collected_filter,
     })
 
-@login_required
+@login_required(login_url='/login/')
 def new_post(request):
     if request.method == 'POST':
         title = request.POST.get('title')
@@ -72,7 +72,7 @@ def new_post(request):
     })
 
 
-@login_required
+@login_required(login_url='/login/')
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
 
@@ -84,7 +84,7 @@ def delete_post(request, post_id):
     return redirect('post_list')  # 删除后重定向到帖子列表
 
 
-@login_required
+@login_required(login_url='/login/')
 def edit_post(request, post_id):
     #print("GET data:", request.GET)
     #print("POST data:", request.POST)
@@ -132,6 +132,7 @@ def post_detail(request, post_id):
         'is_collected': is_collected,
     })
 
+@login_required(login_url='/login/')
 def collect_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     collect, created = Collect.objects.get_or_create(user=request.user, post=post)
@@ -143,7 +144,7 @@ def collect_post(request, post_id):
         messages.info(request, '你已经收藏过这个帖子。')
     return redirect('post_detail', post_id=post_id)
 
-
+@login_required(login_url='/login/')
 def remove_collect(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     collect = Collect.objects.filter(user=request.user, post=post).first()
@@ -152,14 +153,13 @@ def remove_collect(request, post_id):
         messages.success(request, '成功移除收藏！')
     return redirect('post_detail', post_id=post_id)
 
-
+@login_required(login_url='/login/')
 def collected_posts(request, post_id):
     collected_posts = Collect.objects.filter(user=request.user).values_list('post', flat=True)
     posts = Post.objects.filter(id__in=collected_posts)
     return render(request, 'collected_posts.html', {'posts'})
 
-
-@login_required
+@login_required(login_url='/login/')
 def new_comment(request, post_id):
     # 获取帖子对象，如果不存在则返回 404 错误
     post = get_object_or_404(Post, id=post_id)
@@ -185,7 +185,7 @@ def new_comment(request, post_id):
     })
 
 
-@login_required
+@login_required(login_url='/login/')
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
 
@@ -199,7 +199,7 @@ def delete_comment(request, comment_id):
     return redirect('post_list')  # 删除后重定向到帖子列表
 
 
-@login_required
+@login_required(login_url='/login/')
 def new_reply(request, post_id, comment_id):
     # 获取评论对象，如果不存在则返回 404 错误
     comment = get_object_or_404(Comment, id=comment_id)
@@ -224,7 +224,7 @@ def new_reply(request, post_id, comment_id):
     })
 
 
-@login_required
+@login_required(login_url='/login/')
 def delete_reply(request, post_id, reply_id):
     reply = get_object_or_404(Reply, id=reply_id)
 
