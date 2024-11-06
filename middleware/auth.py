@@ -40,10 +40,11 @@ class InfoMiddleware:
         # the view (and later middleware) are called.
 
         views_dir = (dir(views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views))
-        views_dir.append('my_login')
-        views_dir.append('log_out')
-        views_dir.append('user_page')
-        views_dir.append('user_edit')
+        views_dir += ['my_login','log_out','user_page','user_edit','fav_post','user_post','user_comment','user_reply']
+        # views_dir.append('my_login')
+        # views_dir.append('log_out')
+        # views_dir.append('user_page')
+        # views_dir.append('user_edit')
         if resolve(request.path_info).func.__name__ in views_dir:
             # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
             # 若没有，则创建
@@ -53,7 +54,7 @@ class InfoMiddleware:
             if request.session["info"]["current_url"] != request.path_info:
 
                 utils.update_session(request.session, "info", {"current_url": request.path_info,"last_url": request.session["info"]["current_url"]})
-            # print(request.session["info"]["current_url"], request.session["info"]["last_url"])
+            print(request.session["info"]["current_url"], request.session["info"]["last_url"])
         else:
             utils.set_default_session(request.session, "info", {"current_url": reverse("site_nav:default"),"last_url": reverse("site_nav:default")})
 

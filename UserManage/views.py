@@ -593,3 +593,20 @@ def user_edit(request):
         else:
             return render(request,"editpage.html",{'form':form,'email':email,'join_time':join_time})
     return render(request,"editpage.html",{'form':EditForm(),'firstname':firstname,'lastname':lastname,'username':username,'email':email,'join_time':join_time})
+@login_required(login_url='/login/')
+def fav_post(request):
+    collected_posts = Collect.objects.filter(user=request.user).values_list('post', flat=True)
+    posts = Post.objects.filter(id__in=collected_posts)
+    return render(request,"favpost.html",locals())
+@login_required(login_url='/login/')
+def user_post(request):
+    user_posts = Post.objects.filter(user=request.user)
+    return render(request,"userpost.html",locals())
+@login_required(login_url='/login/')
+def user_comment(request):
+    user_comments = Comment.objects.filter(user=request.user)
+    return render(request,"usercomment.html",locals())
+@login_required(login_url='/login/')
+def user_reply(request):
+    user_replies = Reply.objects.filter(user=request.user)
+    return render(request,"userreply.html",locals())

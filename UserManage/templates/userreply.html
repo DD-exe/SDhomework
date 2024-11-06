@@ -58,10 +58,9 @@
 
 
     <div class="container-fluid">
-    {% include "nav.html"%}
+    {% include "nav.html" %}
     <div class="row" style="height: 100vh">
-
-            <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary" >
+    <div class="sidebar border border-right col-md-3 col-lg-2 p-0 bg-body-tertiary">
       <div class="offcanvas-md offcanvas-end bg-body-tertiary" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel" >
         <div class="offcanvas-header">
           <h5 class="offcanvas-title" id="sidebarMenuLabel">信安综合网站</h5>
@@ -108,66 +107,37 @@
         </div>
       </div>
     </div>
-        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-    <div class="py-5 text-center">
-      <h2>个人信息</h2>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div class ="p-8">
+
+    <div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="p-5 my-5 border">
+                <h3 class="text-center mb-3">我发表的回复</h3>
+                <ul class="list-group mb-3">
+                    {% for reply in user_replies %}
+                        <li class="list-group-item">
+                            <br>
+                            回复于: <a href="{% url 'post_detail' reply.comment.post.id %}">{{ reply.comment.post.title }}</a> - "{{ reply.content }}"
+                            <p style="text-align: right;">--创建于 {{ reply.comment.created_at|date:"Y-m-d H:i" }}</p>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">您尚未发表任何回复。</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
-    <div class="row g-12">
-      <div class="col-md-6 col-lg-6 offset-3 ">
-        <form class="needs-validation" method="post" novalidate>
-            {% csrf_token %}
-          <div class="row g-3">
-            <div class="col-sm-6">
-              <label for="lastName" class="form-label">姓氏</label>
-{#              <input type="text" class="form-control" id="lastName" placeholder="{{ lastname }}" >#}
-                {{ form.last_name }}
-                <span style="color: red">{{ form.last_name.errors.0 }}</span>
-            </div>
+</div>
 
-            <div class="col-sm-6">
-              <label for="firstName" class="form-label">名字</label>
-{#              <input type="text" class="form-control" id="firstName" placeholder="{{ firstname }}">#}
-                {{ form.first_name }}
-                <span style="color: red">{{ form.first_name.errors.0 }}</span>
-            </div>
-
-            <div class="col-12">
-              <label for="username" class="form-label">用户名</label>
-{#                <input type="text" class="form-control" id="username" placeholder="{{ username }}">#}
-                  {{ form.username }}
-                <span style="color: red">{{ form.username.errors.0 }}</span>
-            </div>
-
-            <div class="col-12">
-              <label for="email" class="form-label">邮箱</label>
-              <input type="email" class="form-control" id="email" placeholder="{{ email }}" disabled>
-            </div>
-
-            <div class="col-12">
-              <label for="address" class="form-label">加入时间</label>
-                <input type="text" class="form-control" id="join_time" placeholder="{{ join_time }}" disabled>
-            </div>
-              <br/>
-            <div class="col-sm-12">
-                <button class="w-100 btn btn-primary btn-lg" type="submit" style="margin-top: 20px">保存修改</button>
-            </div>
-          </div>
-        </form>
-          <div class="row g-3">
-              <div class="col-sm-12">
-                <button class="w-100 btn btn-primary btn-lg" style="margin-top: 20px;margin-bottom: 30px" onclick="window.location.href = '{% url 'user_page:user_page' %}'">取消修改</button>
-            </div>
-          </div>
-      </div>
     </div>
     </main>
     </div>
     </div>
 </body>
 </html>
-
-
-
 
 
