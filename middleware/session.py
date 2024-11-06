@@ -28,7 +28,7 @@ class InfoMiddleware:
     最好优先执行此中间件，以免在执行此中间件前被其他中间件拦截request。
     '''
 
-    views_dir = dir(site_nav.views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views) + ['my_login', 'log_out', 'user_page', 'user_edit']
+    views_dir = dir(site_nav.views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views) + ['my_login', 'log_out', 'user_page', 'user_edit','fav_post','user_post','user_comment','user_reply']
 
     def __init__(self, get_response):
         self.get_response = get_response

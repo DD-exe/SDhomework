@@ -1,7 +1,6 @@
 import uuid
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.db.models.functions import MD5
 from django.shortcuts import render, redirect , HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -127,8 +126,8 @@ class EditForm(forms.Form):
 
 
 def my_login(request):
-    # if request.user.is_authenticated:
-    #     return redirect('/admin/')
+    if request.user.is_authenticated:
+        return redirect('/')
     if request.method == 'POST':
         remember = request.POST.get('rememberpw')
         form = LoginForm(data=request.POST)
