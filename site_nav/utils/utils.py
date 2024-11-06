@@ -14,7 +14,7 @@ def get_title(url):
 
     try:
         # 发送HTTP GET请求  
-        response = requests.get(url, timeout=1)  
+        response = requests.get(url, timeout=2)  
         # 检查请求是否成功  
         if response.status_code == 200:  
             # 解析HTML内容  

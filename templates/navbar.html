@@ -69,7 +69,7 @@
           <li class="nav-item d-flex mx-2"><a class="nav-link" href="/login/">登录</a></li>
           {% else %}
           <li class="nav-item d-flex mx-2 dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">用户</a>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-auto-close="true" aria-expanded="false">{{ user.username|default_if_none:"用户" }}</a>
             <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item" href="{% url 'user_page:user_page' %}">个人主页</a></li>
               <li><a class="dropdown-item" href="{% url 'logout' %}">注销</a></li>

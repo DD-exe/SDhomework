@@ -18,9 +18,9 @@
           <h5 class="fw-bold"><a href="#" class="nav-link active">所有分类</a></h5>
         </li>
         {% for obj in site_categ_query %}
-          <li class="nav-item">
+          <li class="nav-item site-categ user-id-{{ obj.user_id }}" id="siteCateg_{{ obj.id }}">
             <wow-tooltip class="wowtooltip w-100" aria-describedby="tooltipSiteCateg{{ obj.id }}">
-              <div class="tooltip__label site-categ user-id-{{ obj.user_id }}" id="siteCateg_{{ obj.id }}" aria-describedby="tooltipContentSiteCateg{{ obj.id }}" data-tooltip-placeholder>
+              <div class="tooltip__label" aria-describedby="tooltipContentSiteCateg{{ obj.id }}" data-tooltip-placeholder>
                 <h5><a href="#" class="nav-link link-body-emphasis" onmouseover="this.style.cursor='pointer'">{{ obj.name }}</a></h5>
               </div>
               <div class="tooltip-dropdown" id="tooltipSiteCateg{{ obj.id }}" data-tooltip-dropdown>
@@ -84,9 +84,9 @@
           <div class="p-2 site-nav user-id-{{ obj.user_id }} in-site-categ-{{ obj.category_id }}">
             <wow-tooltip class="wowtooltip w-100 h-100" aria-describedby="tooltipSiteNav{{ obj.id }}">
               <div class="tooltip__label" aria-describedby="tooltipContentSiteNav{{ obj.id }}" data-tooltip-placeholder>
-                <button type="button" class="btn btn-outline-primary w-100 p-0 overflow-hidden text-dark" style="height: 60px;" onclick="window.open('{{ obj.url }}', '_blank')">
+                <button type="button" class="btn btn-outline-primary w-100 p-0 overflow-hidden bg-body" style="height: 60px;" onclick="window.open('{{ obj.url }}', '_blank')">
                   <div class="row g-0">
-                    <div class="col-3 p-0 d-flex text-bg-light" style="height: 60px;">
+                    <div class="col-3 p-0 d-flex" style="height: 60px;">
                       <img class="m-1 img-fluid rounded-start" src="{{ obj.url }}" alt="图片" loading="lazy" />
                     </div>
                     <div class="col-9 p-0 align-content-center">
@@ -200,39 +200,33 @@
 
 {% block script %}
   <script>
-    $(document).ready(function () {
-      // 禁用“确认重新提交表单”
-      window.history.replaceState(null, null, window.location.href)
-    
-      function config_display(button_id) {
-        if (button_id === 'config_alldisplay') {
-          {% for id in user.default_user_ids %}
-            $('.user-id-{{ id }}').removeClass('user-id-hide')
-          {% endfor %}
-          $('.user-id-{{ user.id }}').removeClass('user-id-hide')
-        } else if (button_id === 'config_defaultdisplay') {
-          {% for id in user.default_user_ids %}
-            $('.user-id-{{ id }}').removeClass('user-id-hide')
-          {% endfor %}
-          $('.user-id-{{ user.id }}').addClass('user-id-hide')
-        } else if (button_id === 'config_userdisplay') {
-          {% for id in user.default_user_ids %}
-            $('.user-id-{{ id }}').addClass('user-id-hide')
-          {% endfor %}
-          $('.user-id-{{ user.id }}').removeClass('user-id-hide')
-        }
-    
-        $('.user-id-hide,.in-site-categ-hide').hide(200)
-        $('.site-categ:not(.user-id-hide,.in-site-categ-hide),.site-nav:not(.user-id-hide,.in-site-categ-hide)').show(200)
+    function config_display(button_id) {
+      if (button_id === 'config_alldisplay') {
+        {% for id in user.default_user_ids %}
+          $('.user-id-{{ id }}').removeClass('user-id-hide')
+        {% endfor %}
+        $('.user-id-{{ user.id }}').removeClass('user-id-hide')
+      } else if (button_id === 'config_defaultdisplay') {
+        {% for id in user.default_user_ids %}
+          $('.user-id-{{ id }}').removeClass('user-id-hide')
+        {% endfor %}
+        $('.user-id-{{ user.id }}').addClass('user-id-hide')
+      } else if (button_id === 'config_userdisplay') {
+        {% for id in user.default_user_ids %}
+          $('.user-id-{{ id }}').addClass('user-id-hide')
+        {% endfor %}
+        $('.user-id-{{ user.id }}').removeClass('user-id-hide')
       }
     
+      $('.user-id-hide,.in-site-categ-hide').hide(200)
+      $('.site-categ:not(.user-id-hide,.in-site-categ-hide),.site-nav:not(.user-id-hide,.in-site-categ-hide)').show(200)
+    }
+
+    $(document).ready(function () {
       // 用户自定义内容和默认内容显示选项
       $(':radio[name="config_display"]').click(function () {
         config_display(this.id)
       })
-      window.onload = function () {
-        config_display(window.document.getElementById('collapseConfig').querySelector('[checked]').id)
-      }
     
       // 切换分类
       $('.site-categ').click(function () {
@@ -275,15 +269,18 @@
           }
         }
       })
+
+      // 设置hover button时字体颜色
+      $('.site-nav button.btn-outline-primary').mouseenter(function () {
+        $(this).removeClass('bg-body')
+        $(this).addClass('bg-primary')
+      })
+      $('.site-nav button.btn-outline-primary').mouseleave(function () {
+        $(this).addClass('bg-body')
+        $(this).removeClass('bg-primary')
+      })
     })
     
-    // 设置hover button时字体颜色
-    $('.site-nav button').mouseenter(function () {
-      $(this).find('h5:first').addClass('text-bg-primary')
-    })
-    $('.site-nav button').mouseleave(function () {
-      $(this).find('h5:first').removeClass('text-bg-primary')
-    })
     
     function getFavicon(url) {
       let a = document.createElement('a')
@@ -297,6 +294,14 @@
         obj.src = getFavicon(obj.src)
       })
     })
+
+    window.onload = function () {
+      // 禁用“确认重新提交表单”
+      window.history.replaceState(null, null, window.location.href)
+
+      config_display(window.document.getElementById('collapseConfig').querySelector('[checked]').id)
+      console.log("window config_display")
+    }
   </script>
   <script src="{% static 'js/tooltip.js' %}"></script>
 {% endblock %}
