@@ -11,38 +11,44 @@ from file_encoder.views import rsa_maker
 
 
 def index(request):
-    if request.method == 'POST' and request.POST.get('rsa'):
-        prikey, pubkey = rsa_maker()
-        return render(request, 'txtencoder/index.html', {'prikey': prikey, 'pubkey': pubkey})
-    encode = "ans: "
-    decode = "ans: "
-    mode = request.POST.get('de_mod')
-    if mode is None:
-        mode = request.POST.get('en_mod')
-    if mode is not None:
-        if mode == "option1":
-            e, d = shiftCipher(request)
-        elif mode == "option2":
-            e, d = aes(request)
-        elif mode == "option3":
-            e, d = des(request)
-        elif mode == "option4":
-            e, d = rsa(request)
-        elif mode == "option5":
-            e, d = md5(request)
-        elif mode == "option6":
-            e, d = _hash(request)
+    try:
+        if request.method == 'POST' and request.POST.get('rsa'):
+            prikey, pubkey = rsa_maker()
+            return render(request, 'txtencoder/index.html', {'prikey': prikey, 'pubkey': pubkey})
+        encode = "ans: "
+        decode = "ans: "
+        mode = request.POST.get('de_mod')
+        if mode is None:
+            mode = request.POST.get('en_mod')
+        if mode is not None:
+            if mode == "option1":
+                e, d = shiftCipher(request)
+            elif mode == "option2":
+                e, d = aes(request)
+            elif mode == "option3":
+                e, d = des(request)
+            elif mode == "option4":
+                e, d = rsa(request)
+            elif mode == "option5":
+                e, d = md5(request)
+            elif mode == "option6":
+                e, d = _hash(request)
+            else:
+                e = ""
+                d = ""
         else:
             e = ""
             d = ""
-    else:
-        e = ""
-        d = ""
-    encode += e
-    decode += d
-    return render(request, 'txtencoder/index.html',
-                  {'encode': encode,
-                   'decode': decode})
+        encode += e
+        decode += d
+        return render(request, 'txtencoder/index.html',
+                      {'encode': encode,
+                       'decode': decode})
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return render(request, 'txtencoder/index.html',
+                      {'encode': "error",
+                       'decode': "rorre"})
 
 
 def intt(strin):

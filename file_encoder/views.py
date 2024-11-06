@@ -13,35 +13,39 @@ from django.shortcuts import render
 
 
 def index(request):
-    _warning = ""
-    if request.method == 'POST' and request.POST.get('rsa'):
-        prikey, pubkey = rsa_maker()
-        return render(request, 'file_encoder/index.html', {'prikey': prikey, 'pubkey': pubkey})
-    if request.method == 'POST' and request.FILES.get('file'):
-        mode = request.POST.get('de_mod')
-        e_d = 0
-        key = request.POST.get('key2')
-        if key is None:
-            mode = request.POST.get('en_mod')
-            e_d = 1
-            key = request.POST.get('key1')
-        file = request.FILES['file']
-        file_content = file.read()
-        if mode is not None:
-            if mode == "option2":
-                file_content, _warning = aes(file_content, e_d, key)
-            elif mode == "option3":
-                file_content, _warning = des(file_content, e_d, key)
-            # elif mode == "option4":
-                # file_content, _warning = rsa(file_content, e_d, key)
-        else:
-            return render(request, 'file_encoder/index.html', {'warning': "mode=None"})
-        response = HttpResponse(file_content, content_type='application/octet-stream')
-        # _warning="ok"
-        response['Content-Disposition'] = f'attachment; filename={_warning}'
-        return response
+    try:
+        _warning = ""
+        if request.method == 'POST' and request.POST.get('rsa'):
+            prikey, pubkey = rsa_maker()
+            return render(request, 'file_encoder/index.html', {'prikey': prikey, 'pubkey': pubkey})
+        if request.method == 'POST' and request.FILES.get('file'):
+            mode = request.POST.get('de_mod')
+            e_d = 0
+            key = request.POST.get('key2')
+            if key is None:
+                mode = request.POST.get('en_mod')
+                e_d = 1
+                key = request.POST.get('key1')
+            file = request.FILES['file']
+            file_content = file.read()
+            if mode is not None:
+                if mode == "option2":
+                    file_content, _warning = aes(file_content, e_d, key)
+                elif mode == "option3":
+                    file_content, _warning = des(file_content, e_d, key)
+                # elif mode == "option4":
+                    # file_content, _warning = rsa(file_content, e_d, key)
+            else:
+                return render(request, 'file_encoder/index.html', {'warning': "mode=None"})
+            response = HttpResponse(file_content, content_type='application/octet-stream')
+            # _warning="ok"
+            response['Content-Disposition'] = f'attachment; filename={_warning}'
+            return response
 
-    return render(request, 'file_encoder/index.html', {'warning': _warning})
+        return render(request, 'file_encoder/index.html', {'warning': _warning})
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return render(request, 'file_encoder/index.html', {'warning': "error"})
 
 
 def aes(data, e_d, key):
