@@ -2,7 +2,7 @@
 <!-- templates/edit_post.html -->
 {% extends 'base.html' %}
 
-{% block content %}
+{% block page_content %}
 <h2  class="fw-bold text-center">编辑帖子</h2>
 <form method="POST">
     {% csrf_token %}
@@ -38,7 +38,7 @@
 </form>
 
 <div class="card shadow">
-    <div class="card-footer info">
+    <div class="card-footer bg-body-tertiary">
         <h1 style="text-align:center"><code>THAT'S THE END</code></h1>
     </div>
 </div>

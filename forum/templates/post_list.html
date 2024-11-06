@@ -4,7 +4,7 @@
 
 {% load tz %}
 
-{% block content %}
+{% block page_content %}
     <h1 class="fw-bold text-center mb-4">帖子列表</h1>
 
     <form method="GET" class="text-center">
@@ -90,7 +90,7 @@
     </div>
 
 <div class="card">
-  <div class="card-footer bg-light text-white">
+  <div class="card-footer bg-body-tertiary text-white">
       <nav aria-label="Page navigation" class="text-center">
           <ul class="pagination justify-content-center">
               <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
