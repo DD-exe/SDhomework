@@ -16,12 +16,15 @@
 
     {% endblock %}
   </head>
-<body>
+<body background="{% static 'file_encoder/23822-1.jpg' %}" style="background-size:cover">
     {% include "nav.html" %}
-    <p id="blink">字符串加密综合</p>
+    <p id="blink" style="font-size:3em;color:#EEAA00;background-color:#FF3300;text-align-last:justify;text-align:justify">
+        * 字符串加密综合 *
+    </p>
     <script type="text/javascript">var blink =document.getElementById('blink');setInterval(function () {blink.style.opacity =(blink.style.opacity == 0 ? 1:0);}, 1000);</script>
-    <form method="post" id="encoder">
-        <label for="en_mod">Encoder:</label>
+    <form method="post" id="encoder" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white">
+        <p style="line-height:0.1em">&nbsp;</p>
+        <label for="en_mod">&nbsp;&nbsp;&nbsp;&nbsp;Encoder:</label>
         <select id="en_mod" name="en_mod">
             <option value="option1">移位加密</option>
             <option value="option2">AES加密</option>
@@ -31,17 +34,21 @@
             <option value="option6">hash转写</option>
         </select><br>
         {% csrf_token %}
-        <label for="key1">key:</label>
-        <input type="text" id="key1" name="key1" value="{{ request.POST.key1 }}"><br>
-        <label for="plaintext">text:</label>
-        <input type="text" id="plaintext" name="plaintext" value="{{ request.POST.plaintext }}"><br>
-        <input type="submit" value="加密">
+        <label for="key1">&nbsp;&nbsp;&nbsp;&nbsp;key:</label>
+        <input type="text" style="border:none;" id="key1" name="key1" value="{{ request.POST.key1 }}"><br>
+        <label for="plaintext">&nbsp;&nbsp;&nbsp;&nbsp;text:</label>
+        <input type="text" style="border:none;" id="plaintext" name="plaintext" value="{{ request.POST.plaintext }}"><br>
+        <container style="display: flex; justify-content: center;">
+            <input type="submit" style="border-radius: 20px" value="&nbsp;加&nbsp;密&nbsp;">
+        </container>
+        <div id="encode">&nbsp;&nbsp;&nbsp;&nbsp;{{ encode }}</div>
+        <p style="line-height:0.1em">&nbsp;</p>
     </form>
-    <div id="encode">{{ encode }}</div>
+    <p style="font-size:3em"><br></p>
 
-
-    <form method="post" id="decoder">
-        <label for="de_mod"><blink>Decoder:</blink></label>
+    <form method="post" id="decoder" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white">
+        <p style="line-height:0.1em">&nbsp;</p>
+        <label for="de_mod">&nbsp;&nbsp;&nbsp;&nbsp;Decoder:</label>
         <select id="de_mod" name="de_mod">
             <option value="option1">移位解密</option>
             <option value="option2">AES解密</option>
@@ -49,13 +56,16 @@
             <option value="option4">RSA解密</option>
         </select><br>
         {% csrf_token %}
-        <label for="key2">key:</label>
-        <input type="text" id="key2" name="key2" value="{{ request.POST.key2 }}"><br>
-        <label for="ciphertext">text:</label>
-        <input type="text" id="ciphertext" name="ciphertext" value="{{ request.POST.ciphertext }}"><br>
-        <input type="submit" value="解密">
+        <label for="key2">&nbsp;&nbsp;&nbsp;&nbsp;key:</label>
+        <input type="text" style="border:none;" id="key2" name="key2" value="{{ request.POST.key2 }}"><br>
+        <label for="ciphertext">&nbsp;&nbsp;&nbsp;&nbsp;text:</label>
+        <input type="text" style="border:none;" id="ciphertext" name="ciphertext" value="{{ request.POST.ciphertext }}"><br>
+        <container style="display: flex; justify-content: center;">
+            <input type="submit" style="border-radius: 20px" value="&nbsp;解&nbsp;密&nbsp;">
+        </container>
+        <div id="decode">&nbsp;&nbsp;&nbsp;&nbsp;{{ decode }}</div>
+        <p style="line-height:0.1em">&nbsp;</p>
     </form>
-    <div id="decode">{{ decode }}</div>
     <form id="test" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <input type="hidden" id="rsa" name="rsa" value="1">
