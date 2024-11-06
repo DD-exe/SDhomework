@@ -1,0 +1,138 @@
+
+<!-- templates/post_list.html -->
+{% extends 'base.html' %}
+
+{% load tz %}
+
+{% block page_content %}
+    <h1 class="fw-bold text-center mb-4">帖子列表</h1>
+
+    <form method="GET" class="text-center">
+        <div class="container-sm my-1 p-1" style="width:50%;">
+            <div class="row justify-content-center mt-4 mb-5">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <span class="input-group-text">按主题</span>
+                        <select class="form-select" name="subject">
+                            <option value="">选择主题（默认不筛选）</option>
+                            {% for subject in subjects %}
+                                <option value="{{ subject.name }}" {% if subject.name == selected_subject %}selected{% endif %}>
+                                    {{ subject.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="btn btn-success">搜索</button>
+                        <form method="GET" action="{% url 'post_list' %}" class="mb-4">
+                            <div class="col-md-6">
+                                <div class="btn-group" role="group">
+                                    <button type="submit" name="collected" value="yes" class="btn btn-success {% if collected_filter == 'yes' %}active{% endif %}">
+                                        已收藏
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="container">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="text-center">
+                <th style="width: 15%;">标&nbsp;题(点击查看具体)</th>
+                <th style="width: 8%;">主&nbsp;题</th>
+                <th style="width: 35%;">内&nbsp;容</th>
+                <th style="width: 16%;">发帖时间</th>
+                <th style="width: 5%;">用&nbsp;户</th>
+                <th style="width: 20%;">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for post in page_obj %}
+                <tr class="text-center">
+                    <td>
+                        <a href="{% url 'post_detail' post.id %}" class="btn btn-light">{{ post.title }}</a>
+                    </td>
+                    <td>{{ post.subject }}</td>
+                    <td>
+                        <textarea readonly class="form-control text-center" style="height: 38px;">{{ post.content }}</textarea>
+                    </td>
+                    <td>{{ post.created_at }}</td>
+                    <td><code>{{ post.user.username }}</code></td>
+                    <td>
+                        <form action="{% url 'new_comment' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">评论</button>
+                        </form>
+                        <form action="{% url 'collect_post' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-success btn-sm">收藏</button>
+                        </form>
+                        <form action="{% url 'edit_post' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-warning btn-sm">编辑</button>
+                        </form>
+                        <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-sm">删除</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">没有帖子可显示</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+<div class="card">
+  <div class="card-footer bg-body-tertiary text-white">
+      <nav aria-label="Page navigation" class="text-center">
+          <ul class="pagination justify-content-center">
+              <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                  <a class="btn btn-outline-primary" href="{% if page_obj.has_previous %}?page=1{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="First" {% if not page_obj.has_previous %}onclick="return false;"{% endif %}>
+                      <span aria-hidden="true">{% if not page_obj.has_previous %}已经是第一页{% else %}&laquo; 第一页{% endif %}</span>
+                  </a>
+              </li>
+              <li class="page-item {% if not page_obj.has_previous %}disabled{% endif %}">
+                  <a class="btn btn-outline-info" href="{% if page_obj.has_previous %}?page={{ page_obj.previous_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="Previous" {% if not page_obj.has_previous %}onclick="return false;"{% endif %}>
+                      <span aria-hidden="true">上一页</span>
+                  </a>
+              </li>
+
+              <li class="page-item disabled">
+                  <span class="page-link">第 {{ page_obj.number }} 页，共 {{ page_obj.paginator.num_pages }} 页</span>
+              </li>
+
+              <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                  <a class="btn btn-outline-info" href="{% if page_obj.has_next %}?page={{ page_obj.next_page_number }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="Next" {% if not page_obj.has_next %}onclick="return false;"{% endif %}>
+                      <span aria-hidden="true">下一页</span>
+                  </a>
+              </li>
+              <li class="page-item {% if not page_obj.has_next %}disabled{% endif %}">
+                  <a class="btn btn-outline-primary" href="{% if page_obj.has_next %}?page={{ page_obj.paginator.num_pages }}{% if selected_subject %}&subject={{ selected_subject }}{% endif %}{% if collected_filter %}&collected={{ collected_filter }}{% endif %}{% else %}javascript:void(0);{% endif %}" aria-label="Last" {% if not page_obj.has_next %}onclick="return false;"{% endif %}>
+                      <span aria-hidden="true">{% if not page_obj.has_next %}已经是最后一页{% else %}最后一页 &raquo;{% endif %}</span>
+                  </a>
+              </li>
+          </ul>
+      </nav>
+      <h1 class="text-center"><code>THAT'S THE END</code></h1>
+  </div>
+</div>
+
+
+
+<script>
+    function confirmDelete(postId) {
+        return confirm("确认删除这个帖子吗？");
+    }
+</script>
+
+</ul>
+{% endblock %}
+
+
