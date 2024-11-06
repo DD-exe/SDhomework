@@ -5,37 +5,36 @@
     padding: 0;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    <!-- background: url() no-repeat; -->
-    background-size: cover;
-}
+/*body {*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    justify-content: center;*/
+/*    align-items: center;*/
+/*    height: 100vh;*/
+/*    background-size: cover;*/
+/*}*/
 
 .box {
+    height: auto;
     border-radius: 20px;
+    background-size: cover;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 350px;
-    /*height: 420px;*/
-    height: auto;
-    border-top: 1px solid rgba(255,255,255,0.5);
-    border-left: 1px solid rgba(255,255,255,0.5);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    border-right: 1px solid rgba(255,255,255,0.2);
+    /*border-top: 1px solid rgba(255,255,255,0.5);*/
+    /*border-left: 1px solid rgba(255,255,255,0.5);*/
+    /*border-bottom: 1px solid rgba(255,255,255,0.2);*/
+    /*border-right: 1px solid rgba(255,255,255,0.2);*/
     backdrop-filter: blur(10px);
-    background: rgba(50,50,50,0.2);
+    /*background: rgba(50,50,50,0.2);*/
     padding-top:10px;
     padding-bottom: 10px;
 }
 
 .box > h2 {
-    color: rgba(255,255,255,0.9);
+    color: black;
     margin-bottom: 15px;
     margin-top: 10px;
 }
@@ -51,25 +50,25 @@ body {
 
 .box .input-box > label {
     margin-bottom: 5px;
-    color: rgba(255,255,255,0.9);
+    color: black;
     font-size: 13px;
 }
 
 .box .input-box >div > label {
     margin-bottom: 5px;
-    color: rgba(255,255,255,0.9);
+    color: black;
     font-size: 13px;
     text-decoration-line: blink;
 }
 
 .box .input-box  input {
     box-sizing: border-box;
-    color: rgba(255,255,255,0.9);
+    color: black;
     font-size: 15px;
     height: 35px;
     width: 250px;
     background: rgba(255,255,255,0.3);
-    border: 1px solid rgba(255,255,255,0.5);
+    border: 1px solid darkgrey;
     border-radius: 5px;
     transition: 0.2s;
     outline: none;
@@ -91,6 +90,8 @@ body {
     vertical-align:middle;
     width: 120px;
     align-self: end;
+    border: 1px solid darkgrey;
+    border-radius: 5px;
 }
 
 .box .btn-box {
@@ -114,7 +115,7 @@ body {
     width: 120px;
     height: 35px;
     border: 1px solid rgba(197, 81, 58,0.8);
-    background: rgba(197, 81, 58,0.5);
+    background: dodgerblue;
     color: rgba(255,255,255,0.9);
     border-radius: 5px;
     transition: 0.2s;
@@ -125,14 +126,14 @@ body {
 }
 
 .box .btn-box > div > button:hover {
-    border: 1px solid rgba(248, 108, 76,0.8);
-    background: rgba(248, 108, 76,0.5);
+    border: 1px solid dodgerblue;
+    background: lightskyblue;
 }
 
 #remember {
     display: inline-block;
     font-size: 14px;
-    color: rgba(255,255,255,0.9);
+    color: black;
     width: 120px;
     vertical-align: middle;
     text-align: left;
@@ -143,7 +144,7 @@ body {
 .box .btn-box > div > a {
     font-size: 13px;
     text-decoration: none;
-    color: rgba(255,255,255,0.9);
+    color: black;
     transition: 0.2s;
     width: 250px;
     text-align: end;
@@ -192,6 +193,7 @@ body {
 
 .tips .tip1, .tips .tip2{
     padding-left:16px;
+    margin-bottom: 0;
 }
 
 .tips .point{
