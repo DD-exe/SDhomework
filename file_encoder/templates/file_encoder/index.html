@@ -6,11 +6,11 @@
 {% endblock %}
 {% block content %}
 <div style="background-image:url({% static 'file_encoder/23822-1.jpg' %});background-size: cover;">
-    <p id="blink" style="font-size:3em;color:#EEAA00;background-color:#FF3300;text-align-last:justify;text-align:justify">
+    <p class="mb-5" id="blink" style="font-size:3em;color:#EEAA00;background-color:#FF3300;text-align-last:justify;text-align:justify; max-width: 50%; margin: 0 auto;">
         * 文件加密综合 *
     </p>
-    <div class="upload-container">
-        <form id="encoder" enctype="multipart/form-data" method="post" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white" class="bg-body">
+    <div class="upload-container" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+        <form id="encoder" enctype="multipart/form-data" method="post" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white" class="bg-body mt-5">
             <p style="line-height:0.1em">&nbsp;</p>
             <label for="en_mod">&nbsp;&nbsp;&nbsp;&nbsp;Encoder:</label>
             <select id="en_mod" name="en_mod">
