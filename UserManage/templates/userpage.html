@@ -98,5 +98,93 @@
 
 </div>
 
+<div class="container mt-5">
+<div class="row justify-content-center">
+<div class="col-md-8">
+<div class="p-5 my-5 border">
+    <h3 class="text-center mb-3">我收藏的帖子</h3>
+    {% if posts %}
+        <div class="list-group">
+            {% for post in posts %}
+                <a href="{% url 'post_detail' post.id %}" class="list-group-item list-group-item-action">
+                    <br>标题：
+                    <span>{{ post.title }}</span>
+                    <p style="text-align: right;">--创建于 {{ post.created_at|date:"Y-m-d H:i" }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>你还没有收藏任何帖子。</p>
+    {% endif %}
+</div>
+</div>
+</div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="p-5 my-5 border">
+                <h3 class="text-center mb-3">我发表的帖子</h3>
+                <div class="list-group mb-3">
+                    {% for post in user_posts %}
+                        <a href="{% url 'post_detail' post.id %}" class="list-group-item list-group-item-action">
+                            <br>标题：
+                            <span>{{ post.title }}</span>
+                            <p style="text-align: right;">--创建于 {{ post.created_at|date:"Y-m-d H:i" }}</p>
+                        </a>
+                    {% empty %}
+                        <p class="list-group-item">您尚未发表任何帖子。</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="p-5 my-5 border">
+                <h3 class="text-center mb-3">我发表的评论</h3>
+                <ul class="list-group mb-3">
+                    {% for comment in user_comments %}
+                        <li class="list-group-item">
+                            <br>
+                            评论于: <a href="{% url 'post_detail' comment.post.id %}">{{ comment.post.title }}</a> - "{{ comment.content }}"
+                            <p style="text-align: right;">--创建于 {{ comment.created_at|date:"Y-m-d H:i" }}</p>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">您尚未发表任何评论。</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="p-5 my-5 border">
+                <h3 class="text-center mb-3">我发表的回复</h3>
+                <ul class="list-group mb-3">
+                    {% for reply in user_replies %}
+                        <li class="list-group-item">
+                            <br>
+                            回复于: <a href="{% url 'post_detail' reply.comment.post.id %}">{{ reply.comment.post.title }}</a> - "{{ reply.content }}"
+                            <p style="text-align: right;">--创建于 {{ reply.comment.created_at|date:"Y-m-d H:i" }}</p>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">您尚未发表任何回复。</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 </body>
 </html>
