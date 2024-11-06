@@ -1,0 +1,40 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-Hans">
+  <head>
+    <meta charset="utf-8" />
+    <!-- good to view on different device -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- keywords for search engine -->
+    {% comment %} <meta name="keywords" content="" /> {% endcomment %}
+    {% comment %} <meta name="description" content="" /> {% endcomment %}
+    {% comment %} <meta name="author" content="Zhu Zhouzheng" /> {% endcomment %}
+    <title>信安综合网站</title>
+
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" />
+
+    {% block style %}
+    {% endblock %}
+  </head>
+
+  <body>
+    {% include "theme_toggler.html" %}
+    {% include "navbar.html" %}
+
+    {% block content %}
+    {% endblock %}
+
+    {% include "footer.html" %}
+
+    <script src="{% static 'plugins/jquery-3.7.1.min.js' %}"></script>
+    {% comment '单独引用bundle，两个同时引用会冲突' %}
+    {% endcomment %}
+    {% comment %} <script src="{% static 'plugins/bootstrap-5.3.3-dist/js/bootstrap.min.js' %}"></script> {% endcomment %}
+    <script src="{% static 'plugins/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/color-modes.js' %}"></script>
+
+    {% block script %}
+    {% endblock %}
+  </body>
+</html>
