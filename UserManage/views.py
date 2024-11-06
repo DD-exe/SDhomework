@@ -106,19 +106,19 @@ class EditForm(forms.Form):
     username = forms.CharField(
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder':'请输入新的用户名',"class":"form-control"}),
+        widget=forms.TextInput(attrs={'placeholder':'请输入用户名',"class":"form-control"}),
         validators=[validators.validate_username]
     )
     first_name = forms.CharField(
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={ 'placeholder': '请输入新的名字',"class":"form-control"}),
+        widget=forms.TextInput(attrs={ 'placeholder': '请输入名字',"class":"form-control"}),
         validators = [validators.validate_name]
     )
     last_name = forms.CharField(
         max_length=100,
         required=True,
-        widget=forms.TextInput(attrs={'placeholder': '请输入新的姓氏',"class":"form-control"}),
+        widget=forms.TextInput(attrs={'placeholder': '请输入姓氏',"class":"form-control"}),
         validators = [validators.validate_name]
     )
 
