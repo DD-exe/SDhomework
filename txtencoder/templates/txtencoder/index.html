@@ -6,10 +6,11 @@
 {% endblock %}
 {% block content %}
 <div style="background-image:url({% static 'file_encoder/23822-1.jpg' %});background-size: cover;">
-    <p id="blink" style="font-size:3em;color:#EEAA00;background-color:#FF3300;text-align-last:justify;text-align:justify">
+    <p class="mb-5" id="blink" style="font-size:3em;color:#EEAA00;background-color:#FF3300;text-align-last:justify;text-align:justify; max-width: 50%; margin: 0 auto;">
         * 字符串加密综合 *
     </p>
-    <form method="post" id="encoder" class="bg-body" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white">
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
+    <form method="post" id="encoder" class="bg-body mt-5" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white">
         <p style="line-height:0.1em">&nbsp;</p>
         <label for="en_mod">&nbsp;&nbsp;&nbsp;&nbsp;Encoder:</label>
         <select id="en_mod" name="en_mod">
@@ -53,6 +54,7 @@
         <div id="decode">&nbsp;&nbsp;&nbsp;&nbsp;{{ decode }}</div>
         <p style="line-height:0.1em">&nbsp;</p>
     </form>
+    </div>
     <form id="test" enctype="multipart/form-data" method="post">
         {% csrf_token %}
         <input type="hidden" id="rsa" name="rsa" value="1">
