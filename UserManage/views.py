@@ -13,6 +13,7 @@ from io import BytesIO
 from django import forms
 from UserManage.utils import validators,randomstr
 from django.core.mail import send_mail
+from forum.models import Post,Subject,Collect,Comment,Reply
 
 
 class LoginForm(forms.Form):
@@ -553,6 +554,14 @@ def user_page(request):
     username = request.user.username
     email = request.user.email
     join_time = request.user.date_joined
+
+    collected_posts = Collect.objects.filter(user=request.user).values_list('post', flat=True)
+    posts = Post.objects.filter(id__in=collected_posts)
+
+    user_posts = Post.objects.filter(user=request.user)
+    user_comments = Comment.objects.filter(user=request.user)
+    user_replies = Reply.objects.filter(user=request.user)
+
     return render(request,"userpage.html",locals())
 
 @login_required(login_url='/login/')
