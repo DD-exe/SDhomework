@@ -1,0 +1,31 @@
+<!-- new_comment.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block page_content %}
+    <h2 class = "fw-bold text-center">发表回复</h2>
+<div class="container p-5 my-5 border">
+    <div class="input-group mb-3">
+        <span class="fw-bold input-group-text">当前用户： </span>
+        <input readonly class="form-control" value="{{ user.username }}"></input>
+    </div>
+    <form method="POST">
+        {% csrf_token %}
+        <div>
+            <label class = "fw-bold mb-3">回复内容:</label>
+            <textarea name="content" class="form-control mb-3" required></textarea>
+        </div>
+
+        <div class = "text-center">
+            <button type="submit" class="btn btn-outline-primary">提交回复</button>
+        </div>
+    </form>
+</div>
+
+<div class="card shadow">
+        <div class="card-footer bg-body-tertiary">
+            <h1 class="text-center"><code>THAT'S THE END</code></h1>
+        </div>
+</div>
+
+{% endblock %}

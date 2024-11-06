@@ -1,0 +1,122 @@
+<!-- templates/post_detail.html -->
+{% extends 'base.html' %}
+
+{% block page_content %}
+<div>
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-md-8">  <!-- 设置列宽 -->
+                <div class="p-5 my-5 border">
+                    <h2 class="text-center mb-3"><code class="fw-bold">{{ post.title }}</code></h2>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> &ensp;主&ensp;&ensp;题&ensp; </span>
+                        <input readonly class="form-control text-center" value="{{ post.subject }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> &ensp;内&ensp;&ensp;容&ensp; </span>
+                        <textarea readonly class="form-control text-center" style="height: 38px;">{{ post.content }}</textarea>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> &ensp;用&ensp;&ensp;户&ensp; </span>
+                        <input readonly class="form-control text-center" value="{{ post.user.username }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> 发帖时间 </span>
+                        <input readonly class="form-control text-center" value="{{ post.created_at }}">
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text"> 最后更新 </span>
+                        <input readonly class="form-control text-center" value="{{ post.updated_at }}">
+                    </div>
+                    <div class="text-center">
+                        <form action="{% url 'new_comment' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-light btn-lg">评论</button>
+                        </form>
+                        <form action="{% url 'edit_post' post.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-warning btn-lg">编辑</button>
+                        </form>
+                        <form action="{% url 'delete_post' post.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger btn-lg">删除</button>
+                        </form>
+                        <form action="{% if is_collected %}{% url 'remove_collect' post.id %}{% else %}{% url 'collect_post' post.id %}{% endif %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            {% if is_collected %}
+                                <button type="submit" class="btn btn-outline-secondary btn-lg">取消收藏</button>
+                            {% else %}
+                                <button type="submit" class="btn btn-outline-success btn-lg">收藏</button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 评论部分 -->
+                <div class="container mt-4 mb-4 border">
+                    <h2 class="mt-5 mb-5">评论</h2>
+                    <table class="table table-bordered mb-5">
+                        <tbody>
+                        {% for comment in post.comment_set.all %}
+                            <tr class="text-center">
+                                <td style="width: 35%;">
+                                    <textarea readonly class="form-control text-center" style="height: 38px;">{{ comment.content }}</textarea>
+                                </td>
+                                <td style="width: 35%;">
+                                    <span>由&ensp;<code>{{ comment.user.username }}</code></span>
+                                    <span>创建于&ensp;<code>{{ comment.created_at }}</code></span>
+                                </td>
+                                <td style="width: 20%;">
+                                    <form action="{% url 'delete_comment' comment.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">删除</button>
+                                    </form>
+                                    <form action="{% url 'new_reply' post.id comment.id %}" method="POST" style="display:inline;">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm">回复</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% for reply in comment.replies.all %}
+                                <tr>
+                                <td colspan="1" style="width: 35%; text-align: left; padding-left: 50px;">
+                                    <textarea readonly class="form-control text-center" style="height: 38px;">{{ reply.content }}</textarea>
+                                </td>
+                                <td style="width: 35%;">
+                                    <span>由&ensp;<code>{{ reply.user.username }}</code></span>
+                                    <span>回复于&ensp;<code>{{ reply.created_at }}</code></span>
+                                </td>
+                                <td style="width: 20%;">
+                                    <form action="{% url 'delete_reply' reply.id %}" method="POST" style="display:inline;" onsubmit="return confirmDelete();">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-danger btn-sm">删除回复</button>
+                                    </form>
+                                </td>
+                                </tr>
+                            {% empty %}
+
+                            {% endfor %}
+                        {% empty %}
+                            <tr>没有评论可显示。</tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow">
+    <div class="card-footer bg-body-tertiary">
+        <h1 class="text-center"><code>THAT'S THE END</code></h1>
+    </div>
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("确认删除这个帖子吗？");
+    }
+</script>
+
+{% endblock %}
