@@ -110,34 +110,26 @@
 
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class ="p-8">
-
-
-
-    <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="p-5 my-5 border">
-                <h3 class="text-center mb-3">我发表的评论</h3>
-                <ul class="list-group mb-3">
-                    {% for comment in user_comments %}
-                        <li class="list-group-item">
-                            <br>
-                            评论于: <a href="{% url 'post_detail' comment.post.id %}">{{ comment.post.title }}</a> - "{{ comment.content }}"
-                            <p style="text-align: right;">--创建于 {{ comment.created_at|date:"Y-m-d H:i" }}</p>
-                        </li>
-                    {% empty %}
-                        <li class="list-group-item">您尚未发表任何评论。</li>
-                    {% endfor %}
-                </ul>
+    <br/>
+        <div class="card mb-4">
+            <div class="card-header text-center">
+                <h3>我发表的评论</h3>
+            </div>
+            <div class="card-body">
+                {% if user_comments %}
+                    <ul class="list-group">
+                        {% for comment in user_comments %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>评论于 <a href="{% url 'post_detail' comment.post.id %}">{{ comment.post.title }}</a></span>
+                                <span class="text-muted">创建于 {{ comment.created_at|date:"Y-m-d H:i" }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>您尚未发表任何评论。</p>
+                {% endif %}
             </div>
         </div>
-    </div>
-</div>
-
-
-
-    </div>
     </main>
     </div>
     </div>

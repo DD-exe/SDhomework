@@ -1,0 +1,118 @@
+{% extends 'root.html' %}
+
+{% load static %}
+
+{% block style %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3" />
+
+<style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        width: 100%;
+        height: 3rem;
+        background-color: rgba(0, 0, 0, 0.1);
+        border: solid rgba(0, 0, 0, 0.15);
+        border-width: 1px 0;
+        box-shadow: inset 0 0.5em 1.5em rgba(0, 0, 0, 0.1), inset 0 0.125em 0.5em rgba(0, 0, 0, 0.15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+</style>
+
+<link href="{% static 'css/product.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<body>
+  <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
+    <symbol id="aperture" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+    <circle cx="12" cy="12" r="10" />
+    <path d="M14.31 8l5.74 9.94M9.69 8h11.48M7.38 12l5.74-9.94M9.69 16L3.95 6.06M14.31 16H2.83m13.79-4l-5.74 9.94" />
+    </symbol>
+    <symbol id="cart" viewBox="0 0 16 16">
+    <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+    </symbol>
+    <symbol id="chevron-right" viewBox="0 0 16 16">
+    <path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z" />
+    </symbol>
+  </svg>
+
+  <main>
+    <div class="card position-relative overflow-hidden m-md-3 text-center bg-body-tertiary">
+      <img src="{% static 'img/technology.png' %}" class="card-img img-fluid" alt="首页背景大图">
+      <div class="card-img-overlay p-lg-5 mx-auto my-sm-1 my-md-2 my-lg-3 my-xl-4 my-xxl-5 text-white">
+        <h1 class="display-3 fw-bold">信安综合网站</h1>
+        <h2 class="fw-normal text my-4">守护数字疆域，共享知识海洋</h2>
+        <h4 class="fw-normal text my-4">开发者:  朱舟政  孟想  邓迪  彭皓  惠琰博</h4>
+        <div class="d-flex gap-3 justify-content-center lead fw-normal">
+          <a class="icon-link text-white text-decoration-none" href="https://github.com/DD-exe/SDhomework">
+            关于项目<svg class="bi">
+              <use xlink:href="#chevron-right" />
+            </svg>
+          </a>
+          <a class="icon-link text-white text-decoration-none" href="https://www.sjtu.edu.cn/">
+            更多<svg class="bi">
+              <use xlink:href="#chevron-right" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+      <div class="text-bg-dark me-md-3 pt-2 px-2 pt-md-4 px-md-4 text-center overflow-hidden" onclick="window.location.href='{% url "site_nav:default" %}';" style="cursor: pointer;">
+        <div class="my-3 py-3">
+          <h2 class="display-5">优质网站导航</h2>
+          <p class="lead">集成各类优质网站 随意定制您的收藏</p>
+        </div>
+        <div class="bg-body-tertiary shadow-sm mx-auto" style="height: 300px; border-radius: 21px 21px 0 0;"></div>
+      </div>
+      <div class="bg-body-tertiary me-md-3 pt-2 px-2 pt-md-4 px-md-4 text-center overflow-hidden" onclick="window.location.href='{% url "home" %}';" style="cursor: pointer;">
+        <div class="my-3 py-3">
+          <h2 class="display-5">信安论坛</h2>
+          <p class="lead">交流互鉴</p>
+        </div>
+        <div class="bg-dark shadow-sm mx-auto" style="height: 300px; border-radius: 21px 21px 0 0;"></div>
+      </div>
+    </div>
+
+    <div class="d-md-flex flex-md-equal w-100 my-md-3 ps-md-3">
+      <div class="bg-body-tertiary me-md-3 pt-2 px-2 pt-md-4 px-md-4 text-center overflow-hidden" onclick="window.location.href='{% url "txtencoder:index" %}';" style="cursor: pointer;">
+        <div class="my-3 p-3">
+          <h2 class="display-5">txtencoder</h2>
+          <p class="lead">txtencoder</p>
+        </div>
+        <div class="bg-dark shadow-sm mx-auto" style="height: 300px; border-radius: 21px 21px 0 0;"></div>
+      </div>
+      <div class="text-bg-primary me-md-3 pt-2 px-2 pt-md-4 px-md-4 text-center overflow-hidden" onclick="window.location.href='{% url "file_encoder:index" %}';" style="cursor: pointer;">
+        <div class="my-3 py-3">
+          <h2 class="display-5">file_encoder</h2>
+          <p class="lead">file_encoder</p>
+        </div>
+        <div class="bg-body-tertiary shadow-sm mx-auto" style="height: 300px; border-radius: 21px 21px 0 0;"></div>
+      </div>
+    </div>
+  </main>
+</body>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

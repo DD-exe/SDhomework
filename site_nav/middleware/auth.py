@@ -1,16 +1,10 @@
 from django.shortcuts import redirect
-from django.urls import reverse, resolve
+from django.urls import reverse
 
-from UserManage.views import img_code
 from ..models import SiteCategory, SiteNav
 from .. import views
 from ..utils import utils
 from ..config import UserAPI
-
-import file_encoder.views
-import txtencoder.views
-import forum.views
-import UserManage.views
 
 # 在“root.html”中的参数，在中间件的`process_template_response`中赋值
 

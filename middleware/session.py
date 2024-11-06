@@ -1,12 +1,8 @@
 from django.shortcuts import redirect
 from django.urls import reverse, resolve
 
-from UserManage.views import img_code
-from site_nav.models import SiteCategory, SiteNav
-from site_nav import views
 from site_nav.utils import utils
-from site_nav.config import UserAPI
-
+import site_nav.views
 import file_encoder.views
 import txtencoder.views
 import forum.views
@@ -32,6 +28,8 @@ class InfoMiddleware:
     最好优先执行此中间件，以免在执行此中间件前被其他中间件拦截request。
     '''
 
+    views_dir = dir(site_nav.views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views) + ['my_login', 'log_out', 'user_page', 'user_edit']
+
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -39,22 +37,14 @@ class InfoMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
 
-        views_dir = (dir(views) + dir(file_encoder.views) + dir(txtencoder.views) + dir(forum.views))
-        views_dir += ['my_login','log_out','user_page','user_edit','fav_post','user_post','user_comment','user_reply']
-        # views_dir.append('my_login')
-        # views_dir.append('log_out')
-        # views_dir.append('user_page')
-        # views_dir.append('user_edit')
-        if resolve(request.path_info).func.__name__ in views_dir:
+        if resolve(request.path_info).func.__name__ in self.views_dir:
             # 若不是访问静态页面，而是访问正常网页调用视图函数，则正常赋值
             # 若没有，则创建
             utils.set_default_session(request.session, "info",{"current_url": request.path_info, "last_url": reverse("site_nav:default")})
             #lasr_url默认值需要改成主页
             # 只有不同才改
             if request.session["info"]["current_url"] != request.path_info:
-
                 utils.update_session(request.session, "info", {"current_url": request.path_info,"last_url": request.session["info"]["current_url"]})
-            print(request.session["info"]["current_url"], request.session["info"]["last_url"])
         else:
             utils.set_default_session(request.session, "info", {"current_url": reverse("site_nav:default"),"last_url": reverse("site_nav:default")})
 
@@ -93,3 +83,5 @@ class InfoMiddleware:
                 config_display = [False, False, True]
             response.context_data.setdefault("config_display", config_display)
         return response
+
+

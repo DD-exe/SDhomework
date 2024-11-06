@@ -110,33 +110,28 @@
 
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-    <div class ="p-8">
-
-      <div class="container mt-5">
-<div class="row justify-content-center">
-<div class="col-md-8">
-<div class="p-5 my-5 border">
-    <h3 class="text-center mb-3">我收藏的帖子</h3>
-    {% if posts %}
-        <div class="list-group">
-            {% for post in posts %}
-                <a href="{% url 'post_detail' post.id %}" class="list-group-item list-group-item-action">
-                    <br>标题：
-                    <span>{{ post.title }}</span>
-                    <p style="text-align: right;">--创建于 {{ post.created_at|date:"Y-m-d H:i" }}</p>
-                </a>
-            {% endfor %}
+<br/>
+        <div class="card mb-4">
+            <div class="card-header text-center">
+                <h3>我收藏的帖子</h3>
+            </div>
+            <div class="card-body">
+                {% if posts %}
+                    <ul class="list-group">
+                        {% for post in posts %}
+                            <a href="{% url 'post_detail' post.id %}" class="list-group-item list-group-item-action d-flex justify-content-between">
+                                <span>{{ post.title }}</span>
+                                <small class="text-muted">创建于 {{ post.created_at|date:"Y-m-d H:i" }}</small>
+                            </a>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>你还没有收藏任何帖子。</p>
+                {% endif %}
+            </div>
         </div>
-    {% else %}
-        <p>你还没有收藏任何帖子。</p>
-    {% endif %}
-</div>
-</div>
-</div>
-</div>
 
 
-    </div>
     </main>
     </div>
     </div>
