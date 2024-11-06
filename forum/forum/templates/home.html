@@ -1,0 +1,82 @@
+{% extends 'root.html' %}
+
+{% load static %}
+{% load tz %}
+
+{% block title %}论坛{% endblock %}
+
+{% block style %}
+<link rel="icon" href="{% static 'images/Spider-Man.ico' %}">
+<link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.css' %}">
+
+<style>
+    html, body {
+        height: 100%;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+    .card-body {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        background-image: url("{% static 'images/Bkg.png' %}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 80vh; /* Make the card body cover the full viewport height */
+    }
+    .card-img-overlay {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+    }
+    .card-footer {
+        margin-top: auto;
+    }
+    .container {
+        border: none;
+        padding: 2rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="card shadow">
+    <div class="card-header bg-body-tertiary">
+        <h1 class="text-center"><code>That's the beginning</code></h1>
+    </div>
+    <div class="card-body">
+        <div class="container text-center card-img-overlay">
+            {% if request.user.is_active %}
+                <h1 class="text-center mb-3">
+                    <code>欢迎来到论坛主页,&ensp;<code>{{ request.user.username }}</code></code>
+                </h1>
+                <div class="text-center">
+                    <a href="{% url 'post_list' %}" class="btn btn-secondary btn-lg mt-3" style="width: 200px;">贴子列表</a><br/>
+                    <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-3" style="width: 200px;">登录其他账号</a><br/>
+                </div>
+            {% else %}
+                <h1 class="text-center mb-3"><code>欢迎来到论坛主页</code></h1>
+                <div class="text-center">
+                    <form action="{% url 'login' %}">
+                        <button type="submit" class="btn btn-primary btn-lg mt-3" style="width: 200px;">请登录</button>
+                    </form><br/>
+                    <form action="{% url 'register' %}">
+                        <button type="submit" class="btn btn-success btn-lg" style="width: 200px;">注册</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="card-footer bg-body-tertiary">
+        <h1 class="text-center"><code>THAT'S THE END</code></h1>
+    </div>
+</div>
+{% endblock %}
