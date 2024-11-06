@@ -5,10 +5,12 @@
 {% load tz %}
 
 {% block content %}
-    <form method="GET" class="mb-4 text-center">
-        <div class="container">
-            <div class="row justify-content-center mb-3">
-                <div class="col-md-6">
+    <h1 class="fw-bold text-center mb-4">帖子列表</h1>
+
+    <form method="GET" class="text-center">
+        <div class="container-sm my-1 p-1" style="width:50%;">
+            <div class="row justify-content-center mt-4 mb-5">
+                <div class="col-md-10">
                     <div class="input-group">
                         <span class="input-group-text">按主题</span>
                         <select class="form-select" name="subject">
@@ -35,7 +37,6 @@
         </div>
     </form>
 
-    <h1 class="fw-bold text-center mb-4">帖子列表</h1>
     <div class="container">
     <table class="table table-bordered">
         <thead>

@@ -1,6 +1,5 @@
 {% load static %}
 {% load tz %}
-
 <!DOCTYPE html>
 <html lang="zh">
 <head>
@@ -43,7 +42,7 @@
                     {% if request.user.is_active %}
                         <h1 class="text-center mb-3">
                             <h1 class="fw-bold animated-rainbow-text">欢迎来到论坛&ensp;,
-                            <code>{{ request.user.username }}</code>
+                            <a href="{% url 'user_page:user_page' %}" class="btn btn-light btn-lg"><code>{{ request.user.username }}</code></a>
                             </h1>
                         </h1>
                     {% else %}

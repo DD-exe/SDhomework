@@ -1,9 +1,11 @@
 {% load static %}
+
 {% load tz %}
 
 <!DOCTYPE html>
 <html lang="zh">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}论坛{% endblock %}</title>
@@ -19,16 +21,13 @@
         }
 
         body {
-            display: flex;
             flex-direction: row; /* 使内容横向排列 */
         }
 
         .card {
-            flex: 1; /* 让卡片填充剩余的空间 */
             display: flex;
             flex-direction: column;
             position: relative; /* 使卡片相对定位 */
-            margin-left: 220px; /* 确保内容不被导航遮挡 */
         }
 
         .card-body {
@@ -69,35 +68,19 @@
             padding: 2rem; /* 根据需要调整内边距 */
         }
 
-        /* 导航样式 */
-        nav {
-            width: 200px;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto; /* 使导航栏可滚动 */
-        }
     </style>
+
 </head>
 
 <body>
 
-<!-- 竖栏导航 -->
-<nav class="flex-column nav bg-light p-3">
-    <h2 class="text-center mb-3"><code>导航</code></h2>
-    {% if request.user.is_active %}
-        <a href="{% url 'home' %}" class="btn btn-secondary mb-3">主页</a>
-        <a href="{% url 'post_list' %}" class="btn btn-outline-info mb-3">贴子列表</a>
-        <a href="{% url 'new_post' %}" class="btn btn-outline-success mb-3">新建帖子</a>
-        <a href="{% url 'logout' %}" class="btn btn-outline-danger mb-3">退出登录</a>
-    {% else %}
-        <a href="{% url 'home' %}" class="btn btn-secondary mb-3">主页</a>
-        <a href="{% url 'post_list' %}" class="btn btn-outline-info mb-3">贴子列表</a>
-    {% endif %}
-</nav>
-
 <div class="card shadow">
+    {% include 'nav.html' %}
+
+    <div style="border-bottom: 2px solid #ddd;"></div>
+
     <div class="card-header bg-light">
-        <h1 style="text-align:center"><code>That's the beginning</code></h1>
+        <h1 class="text-center"><code>That's the beginning</code></h1>
     </div>
 
     <div class="card-body">
@@ -106,13 +89,16 @@
             {% if request.user.is_active %}
                 <h1 class="text-center mb-3">
                     <h1 class="text-center mb-3">
-                        <code>欢迎来到论坛主页,&ensp;{{ request.user.username }}</code>
+                        <code>欢迎来到论坛主页,&ensp;
+                            <code>{{ request.user.username }}</code>
+                        </code>
                     </h1>
                     <div class="text-center">
                         <a href="{% url 'post_list' %}" class="btn btn-secondary btn-lg mt-3" style="width: 200px;">贴子列表</a>
                         <br/>
-                        <a href="{% url 'login' %}" class="btn btn-primary mt-3" style="width: 150px;">登录其他账号</a>
-                        <a href="{% url 'register' %}" class="btn btn-success mt-3" style="width: 150px;">注册另一账号</a>
+                        <a href="{% url 'login' %}" class="btn btn-primary btn-lg mt-3" style="width: 200px;">登录其他账号</a>
+                        <br/>
+
                     </div>
                 </h1>
             {% else %}
