@@ -10,47 +10,58 @@
     {% comment %} <meta name="keywords" content="" /> {% endcomment %}
     {% comment %} <meta name="description" content="" /> {% endcomment %}
     {% comment %} <meta name="author" content="DengDi" /> {% endcomment %}
-    <title>File Encoder</title>
+    <title >File Encoder</title>
 
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-5.3.3-dist/css/bootstrap.min.css' %}" />
     {% block style %}
 
     {% endblock %}
   </head>
-<body>
+<body background="{% static 'file_encoder/23822-1.jpg' %}" style="background-size:cover">
 {% include "nav.html" %}
-<p id="blink">文件加密综合</p>
+<p id="blink" style="font-size:3em;color:#EEAA00;background-color:#FF3300;text-align-last:justify;text-align:justify">
+    * 文件加密综合 *
+</p>
 <script type="text/javascript">var blink =document.getElementById('blink');setInterval(function () {blink.style.opacity =(blink.style.opacity == 0 ? 1:0);}, 1000);</script>
 <div class="upload-container">
-    <form id="encoder" enctype="multipart/form-data" method="post">
-        <label for="en_mod"><blink>Encoder:</blink></label>
+    <form id="encoder" enctype="multipart/form-data" method="post" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white" >
+        <p style="line-height:0.1em">&nbsp;</p>
+        <label for="en_mod">&nbsp;&nbsp;&nbsp;&nbsp;Encoder:</label>
         <select id="en_mod" name="en_mod">
             <option value="option2">AES加密</option>
             <option value="option3">DES加密</option>
             <!--<option value="option4">RSA加密</option>-->
         </select><br>
         {% csrf_token %}
-        <label for="key1">key:</label>
-        <input type="text" id="key1" name="key1" value="{{ request.POST.key1 }}"><br>
+        <label for="key1">&nbsp;&nbsp;&nbsp;&nbsp;key:</label>
+        <input type="text" style="border:none;" id="key1" name="key1" value="{{ request.POST.key1 }}"><br>
         <input type="file" id="file_en_Upload" name="file" style="display: none;">
-        <button type="button" onclick="document.getElementById('file_en_Upload').click()" class="upload-btn">选择文件</button>
-        <span id="selected_en_File"></span>
-        <button type="submit" class="upload-btn">上传文件</button>
+        <container style="display: flex; justify-content: center;">
+            <button type="button" style="border-radius: 20px" onclick="document.getElementById('file_en_Upload').click()" class="upload-btn">选择文件</button>
+            <span id="selected_en_File"></span>
+            <button type="submit" class="upload-btn" style="border-radius: 20px">上传文件</button>
+        </container>
+        <p style="line-height:0.1em">&nbsp;</p>
     </form>
-    <form id="decoder" enctype="multipart/form-data" method="post">
-        <label for="de_mod"><blink>Decoder:</blink></label>
+    <p style="font-size:3em"><br></p>
+    <form id="decoder" enctype="multipart/form-data" method="post" style="width: 300px;border: 3px solid #00BBAA; border-radius: 20px;background-color:white" >
+        <p style="line-height:0.1em">&nbsp;</p>
+        <label for="de_mod">&nbsp;&nbsp;&nbsp;&nbsp;Decoder:</label>
         <select id="de_mod" name="de_mod">
             <option value="option2">AES解密</option>
             <option value="option3">DES解密</option>
             <!--<option value="option4">RSA解密</option>-->
         </select><br>
         {% csrf_token %}
-        <label for="key2">key:</label>
-        <input type="text" id="key2" name="key2" value="{{ request.POST.key2 }}"><br>
+        <label for="key2">&nbsp;&nbsp;&nbsp;&nbsp;key:</label>
+        <input type="text" style="border:none;" id="key2" name="key2" value="{{ request.POST.key2 }}"><br>
         <input type="file" id="file_de_Upload" name="file" style="display: none;">
-        <button type="button" onclick="document.getElementById('file_de_Upload').click()" class="upload-btn">选择文件</button>
-        <span id="selected_de_File"></span>
-        <button type="submit" class="upload-btn">上传文件</button>
+        <container style="display: flex; justify-content: center;">
+            <button type="button" style="border-radius: 20px" onclick="document.getElementById('file_de_Upload').click()" class="upload-btn">选择文件</button>
+            <span id="selected_de_File"></span>
+            <button type="submit" class="upload-btn" style="border-radius: 20px">上传文件</button>
+        </container>
+        <p style="line-height:0.1em">&nbsp;</p>
     </form>
     <form id="test" enctype="multipart/form-data" method="post">
         {% csrf_token %}
@@ -74,9 +85,11 @@
         }
     });
     </script>
-    <div id="warning">{{ warning }}</div><br>
+    <!--
+    <div id="warning" style="background-color:#00FF00">{{ warning }}</div><br>
     <div id="prikey">{{ prikey }}</div><br>
     <div id="pubkey">{{ pubkey }}</div><br>
+    -->
 </div>
 <script>
     document.getElementById('file_en_Upload').addEventListener('change', function() {
