@@ -136,6 +136,7 @@ class BootStrapModelForm(forms.ModelForm):
                 if field_name in self.errors:
                     remove_classes(self, [field_name], "is-valid")
                     add_classes(self, [field_name], "is-invalid")
+            return False
 
 
 class BootStrapForm(forms.Form):
@@ -194,13 +195,11 @@ class SiteCategoryOriginForm(BootStrapModelForm):
         obj.user_id = self.user_id
         try:
             obj.full_clean()
-            remove_classes(self, self.server_side_fields, "is-invalid")
-            add_classes(self, self.server_side_fields, "is-valid")
             return True
         except Exception as e:
             self.add_error("name", "分类 已经存在")
-            remove_classes(self, self.server_side_fields, "is-valid")
-            add_classes(self, self.server_side_fields, "is-invalid")
+            remove_classes(self, ["name"], "is-valid")
+            add_classes(self, ["name"], "is-invalid")
             return False
 
     def save(self, commit=True):
@@ -288,19 +287,19 @@ class SiteNavOriginForm(BootStrapModelForm):
         '''
         if not super().is_valid():
             return False
-
+        
         obj = super().save(commit=False)
         obj.user_id = self.user_id
         try:
             obj.full_clean()
-            remove_classes(self, self.server_side_fields, "is-invalid")
-            add_classes(self, self.server_side_fields, "is-valid")
+            # after full_clean all model constraints are valid
+            # some action done by super
             return True
         except Exception as e:
             # 违反unique constriants
             self.add_error("url", "网站链接 已经存在")
-            remove_classes(self, self.server_side_fields, "is-valid")
-            add_classes(self, self.server_side_fields, "is-invalid")
+            remove_classes(self, ["url"], "is-valid")
+            add_classes(self, ["url"], "is-invalid")
             return False
 
     def save(self, commit=True):
