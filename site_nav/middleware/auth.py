@@ -29,7 +29,7 @@ class LoginMiddleware:
         # Code to be executed for each request before
         # the view (and later middleware) are called.
         # 用于判断用户是否登录，若为None，则未登录
-        self.user = UserAPI(request)
+        self.user = UserAPI(request).user
 
         # request被向后传递
         # `process_template_response` 在内部被调用，因此无需显式地调用`process_template_response`
@@ -74,7 +74,7 @@ class AdminMiddleware:
     def __call__(self, request):
         # Code to be executed for each request before
         # the view (and later middleware) are called.
-        user = UserAPI(request)
+        user = UserAPI(request).user
         # 试图访问管理员权限的路径，且不是管理员
         if request.path_info in self.admin_paths and (user.id is None or not user.is_superuser):
             return redirect(reverse(UserAPI.login_url_name()))
@@ -116,7 +116,7 @@ class UserMiddleware:
             # 不是访问敏感路径
             return
 
-        user = UserAPI(request)
+        user = UserAPI(request).user
         if user.is_superuser:
             # 管理员可随意修改
             return

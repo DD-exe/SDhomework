@@ -223,7 +223,7 @@ class SiteCategoryAdminForm(BootStrapModelForm):
         fields = "__all__"
 
 
-def SiteCategoryForm(user:UserAPI, *args, **kwargs):
+def SiteCategoryForm(user, *args, **kwargs):
     return SiteCategoryOriginForm(user.id, *args, **kwargs) if not user.is_superuser else SiteCategoryAdminForm(*args, **kwargs)
 
 
@@ -274,10 +274,6 @@ class SiteNavOriginForm(BootStrapModelForm):
             renderer,
         )
         self.user_id = user_id
-        # if "category" not in constraints:
-        #     constraints["category"] = {"user_id__in": [user_id, *UserAPI.default_user_ids()]}
-        # elif "user_id__in" not in constraints["category"]:
-        #     constraints["category"]["user_id__in"] = [user_id, *UserAPI.default_user_ids()]
         utils.set_default_dd(constraints, "category", {"user_id__in": [user_id, *UserAPI.default_user_ids()]})
         constrain_select(self, constraints)
 
@@ -321,7 +317,7 @@ class SiteNavAdminForm(BootStrapModelForm):
         fields = "__all__"
 
 
-def SiteNavForm(user: UserAPI, constraints=dict(), *args, **kwargs):
+def SiteNavForm(user, constraints=dict(), *args, **kwargs):
     return SiteNavOriginForm(user.id, constraints, *args, **kwargs) if not user.is_superuser else SiteNavAdminForm(*args, **kwargs)
 
 
@@ -330,7 +326,7 @@ def site_nav(request):
         # 获取当前用户id，id在UserAPI.default_user_ids()中表示默认用户，显示未登录可以显示的信息
         id_filter = UserAPI.default_user_ids()
 
-        user_id = UserAPI(request).id
+        user_id = UserAPI(request).user.id
         if user_id is not None:
             id_filter.append(user_id)
 
@@ -354,13 +350,13 @@ def site_nav_add(request):
     op_title = "新增网站"
 
     if request.method == "GET":
-        form = SiteNavForm(user=UserAPI(request))
+        form = SiteNavForm(user=UserAPI(request).user)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         form = SiteNavForm(
-            user=UserAPI(request), data=request.POST)
+            user=UserAPI(request).user, data=request.POST)
 
         if form.is_valid():
             form.save()
@@ -376,14 +372,14 @@ def site_nav_edit(request, id):
     obj = SiteNav.objects.filter(id=id).first()
 
     if request.method == "GET":
-        form = SiteNavForm(user=UserAPI(request), instance=obj)
+        form = SiteNavForm(user=UserAPI(request).user, instance=obj)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         # 与add区别是：`instance`
         form = SiteNavForm(
-            user=UserAPI(request), data=request.POST, instance=obj)
+            user=UserAPI(request).user, data=request.POST, instance=obj)
 
         if form.is_valid():
             form.save()
@@ -410,13 +406,13 @@ def site_categ_add(request):
     op_title = "新增分类"
 
     if request.method == "GET":
-        form = SiteCategoryForm(user=UserAPI(request))
+        form = SiteCategoryForm(user=UserAPI(request).user)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         form = SiteCategoryForm(
-            user=UserAPI(request), data=request.POST)
+            user=UserAPI(request).user, data=request.POST)
 
         if form.is_valid():
             form.save()
@@ -433,14 +429,14 @@ def site_categ_edit(request, id):
 
     if request.method == "GET":
         form = SiteCategoryForm(
-            user=UserAPI(request), instance=obj)
+            user=UserAPI(request).user, instance=obj)
         return TemplateResponse(request, "site_add_edit.html", {"form": form, "op_title": op_title})
 
     # 表单以POST形式提交
     elif request.method == "POST":
         # 与add区别是：`instance`
         form = SiteCategoryForm(
-            user=UserAPI(request), data=request.POST, instance=obj)
+            user=UserAPI(request).user, data=request.POST, instance=obj)
 
         if form.is_valid():
             form.save()

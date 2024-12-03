@@ -14,20 +14,8 @@ else:
             self.request = request
         
         @property
-        def id(self):
-            return self.request.user.id
-
-        @property
-        def username(self):
-            return self.request.user.username
-        
-        @property
-        def is_authenticated(self):
-            return self.request.user.is_authenticated
-
-        @property
-        def is_superuser(self):
-            return self.request.user.is_superuser
+        def user(self):
+            return self.request.user
 
         @staticmethod
         def login_url_name():

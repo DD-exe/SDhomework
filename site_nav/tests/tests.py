@@ -28,12 +28,10 @@ if IS_SITE_NAV_TEST:
             # 反向解析url
             return reverse("User_detail", kwargs={"pk": self.pk})
 
-
-    class UserAPI():
-        _admin_ids = [1]
-
-        def __init__(self, request):
+    class _User():
+        def __init__(self, request, admin_ids):
             self.request = request
+            self._admin_ids = admin_ids
 
         @property
         def id(self):
@@ -51,6 +49,18 @@ if IS_SITE_NAV_TEST:
         def is_superuser(self):
             return self.id in self._admin_ids    
 
+
+    class UserAPI():
+        _admin_ids = [1]
+        _default_ids = [1]
+
+        def __init__(self, request):
+            self.request = request
+
+        @property
+        def user(self):
+            return _User(request, _admin_ids)
+
         @staticmethod
         def login_url_name():
             return "site_nav:login"
@@ -61,4 +71,5 @@ if IS_SITE_NAV_TEST:
 
         @staticmethod
         def default_user_ids():
-            return [1]
+            return _default_ids
+
